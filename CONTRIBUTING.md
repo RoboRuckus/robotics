@@ -1,9 +1,11 @@
 # Contribution Guide
 
-* [Recommendations](#recommendations)
-* [What is the structure of the knowledgebase?](#what-is-the-structure-of-the-knowledgebase)
-  * [What are the differences between the types of resources?](#what-are-the-differences-between-the-types-of-resources)
-* [How to add articles and books](#how-to-add-articles-and-books)
+- [Contribution Guide](#contribution-guide)
+  - [Recommendations](#recommendations)
+  - [What is the structure of the robotics knowledgebase?](#what-is-the-structure-of-the-robotics-knowledgebase)
+    - [How to add a project](#how-to-add-a-project)
+    - [What are the differences between the types of resources?](#what-are-the-differences-between-the-types-of-resources)
+  - [How to add articles, books, and websites](#how-to-add-articles-books-and-websites)
 
 ## Recommendations
 
