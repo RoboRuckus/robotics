@@ -1,0 +1,32 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+// FIXME: Don't use !important to override.
+
+#logo {
+  background: no-repeat center/100% url(../images/tag-logo.png) !important;
+}
+
+#banner {
+  background: #333 !important;
+  border: 1px solid #000 !important;
+
+  #fork {
+    background: #000 !important;
+  }
+
+  .button {
+    border: 1px solid #111 !important;
+    background: #000 !important;
+
+    strong {
+      color: #c2db6f !important;
+    }
+  }
+
+  .button:hover {
+    background: #222 !important;
+  }
+}
