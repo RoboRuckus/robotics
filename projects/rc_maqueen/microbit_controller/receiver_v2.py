@@ -4,6 +4,7 @@
 
 RADIO_GROUP = 90
 RADIO_DEADZONE = 200
+RADIO_MAX = 1024
 
 LEFT_MOTOR = Motors.M1
 RIGHT_MOTOR = Motors.M2
@@ -11,7 +12,7 @@ RIGHT_MOTOR = Motors.M2
 FORWARD = Dir.CW
 REVERSE = Dir.CCW
 
-MAX_SPEED = 255
+MAX_SPEED = 128
 
 # -----------
 # Code Begins
@@ -42,7 +43,7 @@ def on_received_value(name, value):
         turn_channel = value
 
 def radio_to_speed(radio_value):
-    speed = translate(radio_value, 200, 1000, -MAX_SPEED, MAX_SPEED)
+    speed = translate(radio_value, -RADIO_MAX, RADIO_MAX, -MAX_SPEED, MAX_SPEED)
     speed = constrain(speed, -MAX_SPEED, MAX_SPEED)
     return speed
 
@@ -59,8 +60,8 @@ def calculate_speeds_from_radio():
         right_motor_speed = radio_to_speed(straight_channel)
     # Left/Right
     if abs(turn_channel) > RADIO_DEADZONE:
-        left_motor_speed += radio_to_speed(turn_channel)
-        right_motor_speed -= radio_to_speed(turn_channel)
+        left_motor_speed += radio_to_speed(turn_channel/2)
+        right_motor_speed -= radio_to_speed(turn_channel/2)
     # Constrain motors to max speed when mixing
     left_motor_speed = constrain(left_motor_speed, -MAX_SPEED, MAX_SPEED)
     right_motor_speed = constrain(right_motor_speed, -MAX_SPEED, MAX_SPEED)
@@ -156,7 +157,6 @@ def direction_arrow():
                             # . . . #
                             . # # # .
                             """)
-
 
 def setup():
     basic.show_icon(IconNames.HEART)

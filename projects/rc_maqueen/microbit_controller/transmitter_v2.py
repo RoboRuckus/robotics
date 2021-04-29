@@ -100,4 +100,5 @@ def loop():
     direction_arrow()
     send_direction()
 
+setup()
 basic.forever(loop)
