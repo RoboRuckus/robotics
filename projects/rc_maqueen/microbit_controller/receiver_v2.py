@@ -12,7 +12,8 @@ RIGHT_MOTOR = Motors.M2
 FORWARD = Dir.CW
 REVERSE = Dir.CCW
 
-MAX_SPEED = 128
+MAX_SPEED = 255
+TURN_SPEED_RATIO = 1/2
 
 # -----------
 # Code Begins
@@ -60,8 +61,8 @@ def calculate_speeds_from_radio():
         right_motor_speed = radio_to_speed(straight_channel)
     # Left/Right
     if abs(turn_channel) > RADIO_DEADZONE:
-        left_motor_speed += radio_to_speed(turn_channel/2)
-        right_motor_speed -= radio_to_speed(turn_channel/2)
+        left_motor_speed += radio_to_speed(turn_channel * TURN_SPEED_RATIO)
+        right_motor_speed -= radio_to_speed(turn_channel * TURN_SPEED_RATIO)
     # Constrain motors to max speed when mixing
     left_motor_speed = constrain(left_motor_speed, -MAX_SPEED, MAX_SPEED)
     right_motor_speed = constrain(right_motor_speed, -MAX_SPEED, MAX_SPEED)
