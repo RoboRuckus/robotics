@@ -83,8 +83,11 @@ def set_motor_speeds():
         DFRobotMaqueenPlus.motot_stop(RIGHT_MOTOR)
 
 def direction_arrow():
-    if straight_channel > RADIO_DEADZONE:
-        if turn_channel > RADIO_DEADZONE:
+    # Mirror channels so that it points in the direction it's moving
+    straight = -straight_channel
+    turn = -turn_channel
+    if straight > RADIO_DEADZONE:
+        if turn > RADIO_DEADZONE:
             basic.show_leds("""
                             . # # # #
                             . . . # #
@@ -92,7 +95,7 @@ def direction_arrow():
                             . # . . #
                             # . . . .
                             """)
-        elif turn_channel < -RADIO_DEADZONE:
+        elif turn < -RADIO_DEADZONE:
             basic.show_leds("""
                             # # # # .
                             # # . . .
@@ -108,8 +111,8 @@ def direction_arrow():
                             . . # . .
                             . . # . .
                             """)
-    elif straight_channel < -RADIO_DEADZONE:
-        if turn_channel > RADIO_DEADZONE:
+    elif straight < -RADIO_DEADZONE:
+        if turn > RADIO_DEADZONE:
             basic.show_leds("""
                             # . . . .
                             . # . . #
@@ -117,7 +120,7 @@ def direction_arrow():
                             . . . # #
                             . # # # #
                             """)
-        elif turn_channel < -RADIO_DEADZONE:
+        elif turn < -RADIO_DEADZONE:
             basic.show_leds("""
                             . . . . #
                             # . . # .
@@ -134,7 +137,7 @@ def direction_arrow():
                             . . # . .
                             """)
     else:
-        if turn_channel > RADIO_DEADZONE:
+        if turn > RADIO_DEADZONE:
             basic.show_leds("""
                             . . # . .
                             . . . # .
@@ -142,7 +145,7 @@ def direction_arrow():
                             . . . # .
                             . . # . .
                             """)
-        elif turn_channel < -RADIO_DEADZONE:
+        elif turn < -RADIO_DEADZONE:
             basic.show_leds("""
                             . . # . .
                             . # . . .
