@@ -1,3 +1,6 @@
+# The following extensions are required:
+# * MaqueenPlus
+# This program is block-code compatible.
 radio.set_group(90)
 
 def on_forever():
