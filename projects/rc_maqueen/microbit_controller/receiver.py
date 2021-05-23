@@ -1,3 +1,6 @@
+# The following extensions are required:
+# * MaqueenPlus
+# This program is block-code compatible.
 def on_received_number(receivedNumber):
     global received
     received = receivedNumber
