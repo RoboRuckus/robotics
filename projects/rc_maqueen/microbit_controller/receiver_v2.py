@@ -1,3 +1,6 @@
+# The following extensions are required:
+# * MaqueenPlus
+# This program is not block-code compatible.
 # ---------------
 # Hardware Values
 # ---------------
