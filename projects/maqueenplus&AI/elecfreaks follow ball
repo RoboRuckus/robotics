@@ -1,0 +1,29 @@
+# The following extensions are required
+# Maqueen Plus
+# PlanetX_AI-Lens
+# This program is block-code compatible
+PlanetX_AILens.init_module()
+PlanetX_AILens.switchfunc(PlanetX_AILens.FuncList.BALL)
+basic.show_leds("""
+    . . . . .
+    . # . # .
+    . . . . .
+    # . . . #
+    . # # # .
+    """)
+
+def on_forever():
+    PlanetX_AILens.camera_image()
+    if PlanetX_AILens.check_ball():
+        if PlanetX_AILens.ball_data(PlanetX_AILens.Ballstatus.SIZE) < 100:
+            if PlanetX_AILens.ball_data(PlanetX_AILens.Ballstatus.X) < 80:
+                DFRobotMaqueenPlus.motot_run(Motors.M1, Dir.CW, 20)
+                DFRobotMaqueenPlus.motot_run(Motors.M2, Dir.CW, 70)
+            elif PlanetX_AILens.ball_data(PlanetX_AILens.Ballstatus.X) > 144:
+                DFRobotMaqueenPlus.motot_run(Motors.M1, Dir.CW, 70)
+                DFRobotMaqueenPlus.motot_run(Motors.M2, Dir.CW, 20)
+            else:
+                DFRobotMaqueenPlus.motot_run(Motors.ALL, Dir.CW, 30)
+    else:
+        DFRobotMaqueenPlus.motot_stop(Motors.ALL)
+basic.forever(on_forever)
