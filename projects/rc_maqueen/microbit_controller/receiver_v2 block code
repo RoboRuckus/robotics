@@ -1,0 +1,183 @@
+# The following extensions are required:
+# * MaqueenPlus
+# This program is block-code compatible
+#
+def direction_arrow():
+    global straight, turn
+    # Mirror channels so that it points in the direction it's moving
+    straight = 0 - straight_channel
+    turn = 0 - turn_channel
+    if straight > RADIO_DEADZONE:
+        if turn > RADIO_DEADZONE:
+            basic.show_leds("""
+                . # # # #
+                . . . # #
+                . . # . #
+                . # . . #
+                # . . . .
+                """)
+        elif turn < 0 - RADIO_DEADZONE:
+            basic.show_leds("""
+                # # # # .
+                # # . . .
+                # . # . .
+                # . . # .
+                . . . . #
+                """)
+        else:
+            basic.show_leds("""
+                . . # . .
+                . # # # .
+                # . # . #
+                . . # . .
+                . . # . .
+                """)
+    elif straight < 0 - RADIO_DEADZONE:
+        if turn > RADIO_DEADZONE:
+            basic.show_leds("""
+                # . . . .
+                . # . . #
+                . . # . #
+                . . . # #
+                . # # # #
+                """)
+        elif turn < 0 - RADIO_DEADZONE:
+            basic.show_leds("""
+                . . . . #
+                # . . # .
+                # . # . .
+                # # . . .
+                # # # # .
+                """)
+        else:
+            basic.show_leds("""
+                . . # . .
+                . . # . .
+                # . # . #
+                . # # # .
+                . . # . .
+                """)
+    elif turn > RADIO_DEADZONE:
+        basic.show_leds("""
+            . . # . .
+            . . . # .
+            # # # # #
+            . . . # .
+            . . # . .
+            """)
+    elif turn < 0 - RADIO_DEADZONE:
+        basic.show_leds("""
+            . . # . .
+            . # . . .
+            # # # # #
+            . # . . .
+            . . # . .
+            """)
+    else:
+        basic.show_leds("""
+            . # # # .
+            # . . . #
+            # . . . #
+            # . . . #
+            . # # # .
+            """)
+def translate(value: number, left_min: number, left_max: number, right_min: number, right_max: number):
+    global left_span, right_span, value_scaled
+    left_span = left_max - left_min
+    right_span = right_max - right_min
+    # Convert the left range into a 0-1 range float
+    value_scaled = (value - left_min) / left_span
+    # Convert the 0-1 range into a value in the right range
+    return right_min + value_scaled * right_span
+def radio_to_speed(radio_value: number):
+    global speed
+    speed = translate(radio_value,
+        0 - RADIO_MAX,
+        RADIO_MAX,
+        0 - MAX_SPEED,
+        MAX_SPEED)
+    speed = constrain(speed, 0 - MAX_SPEED, MAX_SPEED)
+    return speed
+def constrain(val: number, min_val: number, max_val: number):
+    return min(max_val, max(min_val, val))
+# Lazy implementation of mixing
+def calculate_speeds_from_radio():
+    global left_motor_speed, right_motor_speed
+    # Reset to 0
+    left_motor_speed = 0
+    right_motor_speed = 0
+    # Forward/Backward
+    if abs(straight_channel) > RADIO_DEADZONE:
+        left_motor_speed = radio_to_speed(straight_channel)
+        right_motor_speed = radio_to_speed(straight_channel)
+    # Left/Right
+    if abs(turn_channel) > RADIO_DEADZONE:
+        left_motor_speed += radio_to_speed(turn_channel * TURN_SPEED_RATIO)
+        right_motor_speed += 0 - radio_to_speed(turn_channel * TURN_SPEED_RATIO)
+    # Constrain motors to max speed when mixing
+    left_motor_speed = constrain(left_motor_speed, 0 - MAX_SPEED, MAX_SPEED)
+    right_motor_speed = constrain(right_motor_speed, 0 - MAX_SPEED, MAX_SPEED)
+def setup():
+    basic.show_icon(IconNames.HEART)
+    radio.set_group(RADIO_GROUP)
+    DFRobotMaqueenPlus.i2c_init()
+
+def on_received_value(name, value):
+    global straight_channel, turn_channel
+    if name == "straight":
+        straight_channel = value
+    elif name == "turn":
+        turn_channel = value
+radio.on_received_value(on_received_value)
+
+def set_motor_speeds():
+    if left_motor_speed > 0:
+        DFRobotMaqueenPlus.motot_run(Motors.M1, Dir.CW, left_motor_speed)
+    elif left_motor_speed < 0:
+        DFRobotMaqueenPlus.motot_run(Motors.M1, Dir.CCW, abs(left_motor_speed))
+    else:
+        DFRobotMaqueenPlus.motot_stop(Motors.M1)
+    if right_motor_speed > 0:
+        DFRobotMaqueenPlus.motot_run(Motors.M2, Dir.CW, left_motor_speed)
+    elif right_motor_speed < 0:
+        DFRobotMaqueenPlus.motot_run(Motors.M2, Dir.CCW, abs(left_motor_speed))
+    else:
+        DFRobotMaqueenPlus.motot_stop(Motors.M2)
+right_motor_speed = 0
+left_motor_speed = 0
+turn_channel = 0
+straight_channel = 0
+RADIO_GROUP = 0
+RADIO_DEADZONE = 0
+RADIO_MAX = 0
+MAX_SPEED = 0
+TURN_SPEED_RATIO = 0
+straight = 0
+turn = 0
+left_span = 0
+right_span = 0
+value_scaled = 0
+speed = 0
+speed = 0
+value_scaled = 0
+right_span = 0
+left_span = 0
+turn = 0
+straight = 0
+TURN_SPEED_RATIO = 0
+MAX_SPEED = 0
+RADIO_MAX = 0
+RADIO_DEADZONE = 0
+RADIO_DEADZONE = 200
+RADIO_MAX = 1024
+MAX_SPEED = 255
+RADIO_GROUP = 90
+TURN_SPEED_RATIO = 1 / 2
+# basic.pause(25) # Keep the refresh rate sane
+setup()
+
+def on_forever():
+    calculate_speeds_from_radio()
+    set_motor_speeds()
+    direction_arrow()
+basic.forever(on_forever)
