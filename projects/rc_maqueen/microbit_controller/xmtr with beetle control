@@ -1,0 +1,123 @@
+# The following extensions are required:
+# * MaqueenPlus
+# This program is block-code compatible
+# This program adds a/b button control for the beetle jaws
+def direction_arrow():
+    global straight, turn
+    straight = 0 - input.acceleration(Dimension.Y)
+    turn = input.acceleration(Dimension.X)
+    if straight > DEADZONE:
+        if turn > DEADZONE:
+            basic.show_leds("""
+                . # # # #
+                . . . # #
+                . . # . #
+                . # . . #
+                # . . . .
+                """)
+        elif turn < 0 - DEADZONE:
+            basic.show_leds("""
+                # # # # .
+                # # . . .
+                # . # . .
+                # . . # .
+                . . . . #
+                """)
+        else:
+            basic.show_leds("""
+                . . # . .
+                . # # # .
+                # . # . #
+                . . # . .
+                . . # . .
+                """)
+    elif straight < 0 - DEADZONE:
+        if turn > DEADZONE:
+            basic.show_leds("""
+                # . . . .
+                . # . . #
+                . . # . #
+                . . . # #
+                . # # # #
+                """)
+        elif turn < 0 - DEADZONE:
+            basic.show_leds("""
+                . . . . #
+                # . . # .
+                # . # . .
+                # # . . .
+                # # # # .
+                """)
+        else:
+            basic.show_leds("""
+                . . # . .
+                . . # . .
+                # . # . #
+                . # # # .
+                . . # . .
+                """)
+    elif turn > DEADZONE:
+        basic.show_leds("""
+            . . # . .
+            . . . # .
+            # # # # #
+            . . . # .
+            . . # . .
+            """)
+    elif turn < 0 - DEADZONE:
+        basic.show_leds("""
+            . . # . .
+            . # . . .
+            # # # # #
+            . # . . .
+            . . # . .
+            """)
+    else:
+        basic.show_leds("""
+            . # # # .
+            # . . . #
+            # . . . #
+            # . . . #
+            . # # # .
+            """)
+
+def on_button_pressed_a():
+    radio.send_value("open", 110)
+input.on_button_pressed(Button.A, on_button_pressed_a)
+
+def on_button_pressed_b():
+    radio.send_value("close", 20)
+input.on_button_pressed(Button.B, on_button_pressed_b)
+
+def setup():
+    radio.set_group(RADIO_GROUP)
+    basic.show_icon(IconNames.HEART)
+def send_direction():
+    global straight2, turn2
+    straight2 = 0 - input.acceleration(Dimension.Y)
+    turn2 = input.acceleration(Dimension.X)
+    if abs(straight2) > DEADZONE:
+        radio.send_value("straight", straight2)
+    else:
+        radio.send_value("straight", 0)
+    if abs(turn2) > DEADZONE:
+        radio.send_value("turn", turn2)
+    else:
+        radio.send_value("turn", 0)
+turn2 = 0
+straight2 = 0
+turn = 0
+straight = 0
+RADIO_GROUP = 0
+DEADZONE = 0
+# The following extensions are required:
+# * MaqueenPlus
+# This program is not block-code compatible.
+DEADZONE = 200
+RADIO_GROUP = 90
+setup()
+
+def on_forever():
+    direction_arrow()
+    send_direction()
+basic.forever(on_forever)
