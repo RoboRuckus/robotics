@@ -1,7 +1,7 @@
 # Find a Project
 
 ## By Topic
-
+* [Activity Intro](tutorials/intro.md)
 * General Microbit Projects 
     * [Plant Care Automation](index.md)
 
