@@ -1,16 +1,25 @@
 # The following extensions are required:
 # * MaqueenPlus
-# This program is block-code compatible.
-DEADZONE = 200
+# This program is not block-code compatible.
+DEADZONE = 20
 RADIO_GROUP = 90
+
+def x_input():
+    # return input.acceleration(Dimension.X)
+    return -(joystickbit.get_rocker_value(joystickbit.rockerType.X) - 500)
+
+def y_input():
+    # return input.acceleration(Dimension.Y)
+    return -(joystickbit.get_rocker_value(joystickbit.rockerType.Y) - 500)
 
 def setup():
     radio.set_group(RADIO_GROUP)
+    joystickbit.init_joystick_bit()
     basic.show_icon(IconNames.HEART)
 
 def direction_arrow():
-    straight = -input.acceleration(Dimension.Y)
-    turn = input.acceleration(Dimension.X)
+    straight = -y_input()
+    turn = x_input()
     if straight > DEADZONE:
         if turn > DEADZONE:
             basic.show_leds("""
@@ -88,8 +97,8 @@ def direction_arrow():
                             """)
 
 def send_direction():
-    straight = -input.acceleration(Dimension.Y)
-    turn = input.acceleration(Dimension.X)
+    straight = -y_input()
+    turn = x_input()
     if abs(straight) > DEADZONE:
         radio.send_value('straight', straight)
     else:
