@@ -1,20 +1,15 @@
 # Initialize Maqueen
 DFRobotMaqueenPlus.i2c_init()
 DFRobotMaqueenPlus.PID(PID.OFF)
-DFRobotMaqueenPlus.set_rgb_light(RGBLight.RGBA, Color.BLUE)
 
-# Initialize variables
-Left_Forward_Speed = 33
-Left_Backward_Speed = 33
-Right_Forward_Speed = 33
-Right_Backward_Speed = 33
+#Change LED color here
+DFRobotMaqueenPlus.set_rgb_light(RGBLight.RGBA, Color.BLUE)
 
 # Change movement timings here
 LinearSpeedTarget = 95
 LinearTime = 1300
 LinearDistance = 0.72
 TurnDistance = 0.32
-PlayerNumber = 0
 
 # Change robot name here (must be URL escaped)
 RobotName = "Test%20Bot"
@@ -27,9 +22,15 @@ ServerPort = "8082"
 SSID = "RoboRuckus"
 WPA_Pass = "Ruckus_c0d3"
 
+# Initialize variables, nothing to change from here on
+Left_Forward_Speed = 33
+Left_Backward_Speed = 33
+Right_Forward_Speed = 33
+Right_Backward_Speed = 33
 ConnectionString = "AT+CIPSTART=1,\"TCP\",\"" + ServerAddress + "\"," + ServerPort
 BotNumber = "0"
 Assigned = False
+PlayerNumber = 0
 
 # Set UART buffers to something reasonable
 serial.set_rx_buffer_size(255)
@@ -175,7 +176,7 @@ def WifiStartup():
 
     # Get assigned IP address
     serial.write_string("AT+CIPSTA?" + "\u000D" + "\u000A")
-	# null is discarded, just needed to read until the start of the IP string
+# null is discarded, just needed to read until the start of the IP string
     null = serial.read_until("\"")
     client = serial.read_until("\"")
 
