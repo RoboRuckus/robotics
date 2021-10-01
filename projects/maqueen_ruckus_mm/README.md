@@ -29,6 +29,8 @@ GND ------ GND
 ### Setup RoboRuckus
 Once the code has been deployed and the Wi-Fi module has been hooked-up, you can start up a RoboRuckus server following [these instructions](https://www.roboruckus.com/documentation/setting-up-the-game/). Be sure the Wi-fi SSID and WPA Password are the same on both the server and the code deployed to the Maqueen robot. Once the game server is up and running turn on the Maqueen. If everything connects properly, the Maqueen will show a smiley face on the front of the Micro:bit in 10-20 seconds. If it has trouble connecting it will show a frowny face instead.
 
+If the robot is reconnecting after losing power or being switched off in the middle of a game, it may receive an erroneous movement command. This is fine and the robot should be good to go after it finishes this movement.
+
 ### Wheel Speed Calibration
 If everything connected properly, set the Maqueen down on the edge of the game board and press the **A** button on the Micro:bit. The Maqueen will drive forward for four seconds adjusting the wheel speeds until they match. It will then drive backwards for four seconds and do the same. You can repeat this process at any time if the Maqueen seems to need recalibration. Calibration settings are not preserved when the Maqueen is switched off.
 
