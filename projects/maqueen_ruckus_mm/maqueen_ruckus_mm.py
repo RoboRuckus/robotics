@@ -95,10 +95,10 @@ def ProcessMove(Movement: int, Magnitude: int, OutOfTurn: int):
         if Magnitude > 0:
             if Movement == 0:
                 # Left
-                Turn(1, Magnitude)
+                Turn(Magnitude, 1)
             elif Movement == 1:
                 # Right
-                Turn(0, Magnitude)
+                Turn(Magnitude. 0)
             elif Movement == 2:
                 # Forward
                 LinearMove(Magnitude, 0, False)
