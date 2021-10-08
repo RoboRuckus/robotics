@@ -6,7 +6,7 @@ DFRobotMaqueenPlus.PID(PID.OFF)
 DFRobotMaqueenPlus.set_rgb_light(RGBLight.RGBA, Color.BLUE)
 
 # Change movement timings here
-LinearSpeedTarget = 95
+LinearSpeedTarget = 100
 LinearTime = 1300
 LinearDistance = 0.72
 TurnDistance = 0.32
@@ -23,10 +23,10 @@ SSID = "RoboRuckus"
 WPA_Pass = "Ruckus_c0d3"
 
 # Initialize variables, nothing to change from here on
-Left_Forward_Speed = 33
-Left_Backward_Speed = 33
-Right_Forward_Speed = 33
-Right_Backward_Speed = 33
+Left_Forward_Speed = 40
+Left_Backward_Speed = 40
+Right_Forward_Speed = 40
+Right_Backward_Speed = 40
 ConnectionString = "AT+CIPSTART=1,\"TCP\",\"" + ServerAddress + "\"," + ServerPort
 BotNumber = "0"
 Assigned = False
@@ -380,7 +380,7 @@ def LinearMove(Magnitude: int, MoveDirection: int, Calibrate: bool):
 # Turn (rotate) left or right
 def Turn(magnitude: int, direction: int):
     for index in range (magnitude):
-        # Clear wheels distances and wait for it to complete
+        # Clear wheel distances and wait for it to complete
         DFRobotMaqueenPlus.clear_distance(Motors.ALL)
         basic.pause(50)
         if direction == 0:
