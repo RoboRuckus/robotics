@@ -160,8 +160,8 @@ class MaqueenPlus:
     #Servo: pass e.g. Servo.S1
     def setServo(self, servo, angle):
         current = self.getServo(servo)
-        while current != angle:
-            current = (angle * 0.05) + (current * 0.95)
+        while abs(current - angle) > 3 :
+            current = int((angle * 0.05) + (current * 0.95))
             i2c.write(0x10, bytearray([servo,current]))
             sleep(10)
 
