@@ -6,7 +6,7 @@
 # ---------------
 
 RADIO_GROUP = 90
-RADIO_DEADZONE = 200
+RADIO_DEADZONE = 20
 RADIO_MAX = 1024
 
 LEFT_MOTOR = Motors.M1
@@ -15,7 +15,7 @@ RIGHT_MOTOR = Motors.M2
 FORWARD = Dir.CW
 REVERSE = Dir.CCW
 
-MAX_SPEED = 255
+MAX_SPEED = 80
 TURN_SPEED_RATIO = 1/2
 
 # -----------
