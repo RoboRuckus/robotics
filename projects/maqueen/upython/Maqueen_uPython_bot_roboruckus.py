@@ -2,7 +2,7 @@
 #uPython module: MIT Lesser General Public License Copyright (c) 2021 Technology Alliance Group NW (https://tagnw.org)
 #Contributors: ShipShupe
 
-from microbit import i2c, display, Image, sleep, button_a, button_b, compass, uart
+from microbit import pin1, pin2, i2c, display, Image, sleep, button_a, button_b, compass, uart
 import struct
 import radio
 import time
@@ -65,6 +65,7 @@ class Servos:
 class WiFi:
 
     def __init__(self, ssid, pw, bot = None):
+        uart.init(baudrate=115200, bits=8, parity=None, stop=1, tx=pin1, rx=pin2)
         self.WifiStartup()
         self.bot = bot
 
@@ -128,7 +129,7 @@ class WiFi:
     # then it will wait until that string is found in the response or
     # error if it's not found.
     # If no command is supplied, will just read a response.
-    def SendCommand(self, Command, EndString: str):
+    def SendCommand(self, Command, EndString):
         serial_str = ""
         if Command != "":
             # Send command
@@ -186,7 +187,7 @@ class WiFi:
                 pass
 
     # Attempts to empty any data left in the serial buffer
-    def EmptySerialBuffer():
+    def EmptySerialBuffer(self):
         ser_buffer = uart.read()
         while len(ser_buffer) > 0:
             ser_buffer = uart.read()
