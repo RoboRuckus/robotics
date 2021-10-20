@@ -95,7 +95,7 @@ Please not that the formatting is important, the JSON string must end wtih the s
 | min | The minimum value the parameter can have. |
 | max | The maximum value the parameter can have. |
 | increment | The size of each step when adjusting the slider on the interface. |
-| current | The current value of the paramter on the bot. |
+| current | The current value of the parameter on the bot. |
 
 For example, the complete default JSON object for the Maqueen is:
 ```
