@@ -43,7 +43,7 @@ Once the code has been deployed and the Wi-Fi module has been hooked-up, you can
 If the robot is reconnecting after losing power or being switched off in the middle of a game, it may receive an erroneous movement command. This is fine and the robot should be good to go after it finishes this movement.
 
 ### Calibration
-If you are using the μPython version of the code, and **only** the μPython version of the code, you can use the RoboRuckus server to [tune the robots](https://www.roboruckus.com/documentation/running-a-game/#Tuning-the-Robots). Note that the actual tuning options presented will be different depending on the robot design being used. For the Maqueen you will have the options to tune the variables [described below](https://github.com/tagnw/robotics/tree/main/projects/tuning-varaibles). You can also set the LED colors for the robot. For details on deploying your own tuning options for other robots designs, see [below](https://github.com/tagnw/robotics/tree/main/projects/maqueen_ruckus_mm#custom-tuning-options).
+If you are using the μPython version of the code, and **only** the μPython version of the code, you can use the RoboRuckus server to [tune the robots](https://www.roboruckus.com/documentation/running-a-game/#Tuning-the-Robots). Note that the actual tuning options presented will be different depending on the robot design being used. For the Maqueen you will have the options to tune the variables [described below](https://github.com/tagnw/robotics/tree/main/projects/maqueen_ruckus_mm#tuning-variables). You can also set the LED colors for the robot. For details on deploying your own tuning options for other robots designs, see [below](https://github.com/tagnw/robotics/tree/main/projects/maqueen_ruckus_mm#custom-tuning-options).
 
 The `Speed Test` button will also calibrate the wheel speeds as described [below](https://github.com/tagnw/robotics/tree/main/projects/maqueen_ruckus_mm#wheel-speed-calibration), pushing the **A** button will also work identically to what's described below.
 
@@ -77,7 +77,7 @@ The `data` sent by the server is a comma separated string of the new tuning vari
 ```
 RobotName,value_1,value_2,...,value_n:
 ```
-The new robot name is always first in the list, and the remaining values are what are described by the [JSON object below](https://github.com/tagnw/robotics/tree/main/projects/maqueen_ruckus_mm#the_json_object).
+The new robot name is always first in the list, and the remaining values are what are described by the [JSON object below](https://github.com/tagnw/robotics/tree/main/projects/maqueen_ruckus_mm#the-json-object).
 #### The JSON object
 This JSON string is used by a bot to inform the server of what tuning parameters are available to be adjusted and what their current values are. The object has the form:
 ```
