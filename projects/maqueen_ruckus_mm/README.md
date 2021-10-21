@@ -100,7 +100,7 @@ Please note that the formatting is important, the JSON string must end wtih the 
 For example, the complete default JSON object for the Maqueen is:
 ```
 {"name": "Test%20Bot", "controls": [ 
-	{ "name":"LinearSpeedTarget", "displayname": "Speed", "min": 50, "max": 150, "increment": 1, "current": 100},
+	{ "name": "LinearSpeedTarget", "displayname": "Speed", "min": 50, "max": 150, "increment": 1, "current": 100},
 	{ "name": "LinearTime", "displayname": "Max travel time (ms)", "min": 800, "max": 1500, "increment": 10, "current": 1300},
 	{ "name": "LinearDistance", "displayname": "Travel distance", "min": 0.2, "max": 1.2, "increment": 0.01, "current": 0.72},
 	{ "name": "TurnDistance", "displayname": "Turn distance", "min": 0.2, "max": 1.2, "increment": 0.01, "current": 0.32},
