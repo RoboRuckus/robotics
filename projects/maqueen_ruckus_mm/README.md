@@ -65,7 +65,7 @@ The vairables to tune are as follows:
 | TurnDistance | The number of wheel rotations required of each wheel during the turn sequence. |
 
 ### Custom Tuning Options
-When a robot is not assigned to a player and receives a `1:` from the game server, it will enter tuning mode. There it will wait further instructions of the form `option:data` where `option` is an instruction as described in the below table. The `data` portion is addressed below the table.
+When a robot is not assigned to a player and receives a `1:` message from the game server, it will enter tuning mode. There it will wait for further instructions of the form `option:data` where `option` is an instruction as described in the below table. The `data` portion is addressed below the table.
 | Option | Description |
 | ----------- | ----------- |
 | 0 | Send the tuning JSON object to the server (see below). |
@@ -87,7 +87,7 @@ This JSON string is used by a bot to inform the server of what tuning parameters
   ...
   { "name": "value_n", "displayname": "Parameter n", "min": 0, "max": 2, "increment": 0.1, "current": 0.5}]}
 ```
-Please not that the formatting is important, the JSON string must end wtih the sequence `}]}`. Each object must include the robot name first, and then a list of controls each with the following attributes:
+Please note that the formatting is important, the JSON string must end wtih the sequence `}]}`. Each object must include the robot name first, and then a list of controls each with the following attributes:
 | Attribute | Description |
 | ----------- | ----------- |
 | name | The variable name, should include no spaces or other special characters except `-` or `_` |
