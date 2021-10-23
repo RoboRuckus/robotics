@@ -613,10 +613,14 @@ class MaqueenPlus:
                 settings = RobotName + "," + str(LinearSpeedTarget) + "," + str(LinearTime) + "," + str(LinearDistance) + "," + str(TurnDistance) + "," + str(Color) + "," + str(Left_Forward_Speed) + "," + str(Left_Backward_Speed) + "," + str(Right_Forward_Speed) + "," + str(Right_Backward_Speed) + ":"
                 self.SaveSettings(settings, True, True)
             else:
-                # Load saved settings
-                with open('settings.txt') as settings_file:
-                    content = settings_file.readline()
-                self.SaveSettings(content + ":", False, True)
+                # Try to remove the file first if it exists
+                try:
+                    os.remove("settings.txt")
+                except:
+                    pass
+                # Write text file
+                with open('settings.txt', 'w') as settings_file:
+                    settings_file.write(NewSettings)
 
     # Run the motors and calibrate their speeds
     def CalibrateSpeed(self):
