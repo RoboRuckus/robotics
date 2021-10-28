@@ -44,7 +44,7 @@ class Robot {
      *  Called when the robot takes damage.
      *  amount = total damage taken so far.
      */
-    void takeDamage (int amount) {
+    void takeDamage(int amount) {
       return;
     }
 
