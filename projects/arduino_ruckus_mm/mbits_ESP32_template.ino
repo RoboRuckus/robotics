@@ -110,7 +110,7 @@ class Robot {
       return;
     }
 
-    // Called when the robot needs to drive forward
+    // Called when the robot needs to drive backward
     void driveBackward(int magnitude){
       return;
     }
@@ -136,7 +136,7 @@ class Robot {
     /*
      * Called when a robot has new settings.
      * settings: a comma seprated list of new parameters.
-     * commet: true when the settings should be saved to persistent storage like EEPROM.
+     * commit: true when the settings should be saved to persistent storage like EEPROM.
      * Should also update robot movement parameter varibles with new values.
      */
     void saveSettings(String settings, bool commit) {
@@ -175,7 +175,7 @@ class Robot {
       content += String(leftForwardSpeed);
       content += "},{ \"name\": \"rightForwardSpeed\", \"displayname\": \"Right Forward Speed\", \"min\": 50, \"max\": 150, \"increment\": 1, \"current\":";
       content += String(rightForwardSpeed);
-      content += "},{ \"name\": \"leftBackwardSpeed\", \"displayname\": \"LEft backward Speed\", \"min\": 50, \"max\": 150, \"increment\": 1, \"current\":";
+      content += "},{ \"name\": \"leftBackwardSpeed\", \"displayname\": \"Left Backward Speed\", \"min\": 50, \"max\": 150, \"increment\": 1, \"current\":";
       content += String(leftBackwardSpeed);
       content += "},{ \"name\": \"rightBackwardSpeed\", \"displayname\": \"Right Backward Speed\", \"min\": 50, \"max\": 150, \"increment\": 1, \"current\":";
       content += String(rightBackwardSpeed);
@@ -198,11 +198,11 @@ class Robot {
       delay(1000);
       driveBackward(1);
       delay(1000);
-      turn(1, 0);
+      turn(0, 1);
       delay(1000);
       turn(1, 1);
-      delay(500);
-      turn(2, 0);
+      delay(1000);
+      turn(0, 2);
     }
 
     // Called when the game is reset
