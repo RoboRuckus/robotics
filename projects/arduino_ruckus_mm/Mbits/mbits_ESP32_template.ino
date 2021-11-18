@@ -1,7 +1,10 @@
 /*
+ * This file is licensed under the MIT Lesser General Public License Copyright (c) 2021 Technology Alliance Group NW (https://tagnw.org)
+ *
  * Template for RoboRuckus game robot based on the 
  * ESP32 based Mbits board via Arduino platform.
  * https://www.elecrow.com/mbits.html
+ *
  *
  * External libraries needed:
  * FastLED https://github.com/FastLED/FastLED
@@ -25,13 +28,10 @@ class Robot {
   public:
   /* 
    *  Robot variables.
-   *  Add things like wheel speeds and other
-   *  movement parameters here.
+   *  
    */
     int playerNumber = 0;
     String RobotName, botNum;
-    
-    int leftForwardSpeed, rightForwardSpeed, rightBackwardSpeed, leftBackwardSpeed;
     int robotColor = 0;
 
     enum class colors { Red, Green, Blue, Yellow, White, Putple, Orange };
@@ -219,6 +219,7 @@ class Robot {
     MPU6050 mpu6050 = MPU6050(Wire);
     int BUZZER_PIN = 33;
     int BUZZER_CHANNEL = 0;
+	int leftForwardSpeed, rightForwardSpeed, rightBackwardSpeed, leftBackwardSpeed;
 
     // Image maps for display
     uint8_t image_maps[14][5] = {
@@ -249,19 +250,22 @@ class Robot {
       CRGB(144, 144, 128)
     };
    
-    // Returns string at index of another string separated by deliminator
-    String getValue(String data, char separator, int index){
+    // Takes a string and splits it by a deliminator and returns substring at desired index
+    String getValue(String data, char separator, int index) {
       int found = 0;
+      // Create array to hold indices that bound the substring found between deliminators
       int strIndex[] = {0, -1};
       int maxIndex = data.length()-1;
 
-      for(int i=0; i <= maxIndex && found <= index; i++){
-        if(data.charAt(i) == separator || i == maxIndex){
+      // Look for substring between deliminators
+      for(int i=0; i <= maxIndex && found <= index; i++) {
+        if(data.charAt(i) == separator || i == maxIndex) {
             found++;
             strIndex[0] = strIndex[1]+1;
             strIndex[1] = (i == maxIndex) ? i+1 : i;
         }
       }
+      // If a substring was found at the desired index return it, else return an empty string
       return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
     }
 
@@ -558,8 +562,8 @@ WiFiCommunication wifi;
 
 void setup() {
   // Start the serial connection
-  Serial.println("Start");
   Serial.begin(115200);
+  Serial.println("Starting...");
   Wire.begin(22,21);
 
   //Initialize robot

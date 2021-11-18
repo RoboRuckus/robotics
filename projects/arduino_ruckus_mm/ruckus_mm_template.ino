@@ -1,3 +1,14 @@
+/* 
+ * This file is licensed under the MIT Lesser General Public License Copyright (c) 2021 Technology Alliance Group NW (https://tagnw.org)
+ *
+ * Template for RoboRuckus game robot for the 
+ * Arduino platform using an ESP-01S model
+ * of the ESP8266 Wi-fi module connected via Serial.
+ * https://www.sparkfun.com/products/17146
+ *
+ * Contributors: Sam Groveman
+ */
+
 // Defines the robot class
 class Robot {
   public:
@@ -7,10 +18,20 @@ class Robot {
    *  movement parameters here.
    */
     int playerNumber;
-    String RobotName, botNum;
+    String botNum;
+    String RobotName = "Test%20Bot";
 
     // Initialize robot
-    Robot (String name) : RobotName(name) {}
+    Robot(){}
+
+    // Use this methodto do all the statup work for the robot
+    void begin(){
+      // Initial values should be loaded here
+      leftForwardSpeed = 0;
+      rightForwardSpeed = 0;
+      leftBackwardSpeed = 0;
+      rightBackwardSpeed = 0;
+    }
 
     // Called when a player is assigned to the robot
     void playerAssigned(int player){
@@ -51,7 +72,7 @@ class Robot {
     /*
      * Called when a robot has new settings.
      * settings: a comma seprated list of new parameters.
-     * commet: true when the settings should be saved to persistent storage like EEPROM.
+     * commit: true when the settings should be saved to persistent storage like EEPROM.
      * Should also update robot movement parameter varibles with new values.
      */
     void saveSettings(String settings, bool commit) {
@@ -63,7 +84,17 @@ class Robot {
      * Should return a JSON object of all the modifiable movement parameters.
      */
     String loadSettings(){
-      String content = "{\"name\": \"" + RobotName + "\", \"controls\": [{ \"name\": \"LinearSpeedTarget\", \"displayname\": \"Speed of wheels\", \"min\": 50, \"max\": 150, \"increment\": 1, \"current\": 80},{ \"name\": \"TurnDistance\", \"displayname\": \"Turn distance\", \"min\": 0.1, \"max\": 1.2, \"increment\": 0.01, \"current\": 0.8}]}";
+      String content = "{\"name\": \"";
+      content += RobotName;
+      content += "\", \"controls\": [{ \"name\": \"leftForwardSpeed\", \"displayname\": \"Left Forward Speed\", \"min\": 50, \"max\": 150, \"increment\": 1, \"current\":";
+      content += String(leftForwardSpeed);
+      content += "},{ \"name\": \"rightForwardSpeed\", \"displayname\": \"Right Forward Speed\", \"min\": 50, \"max\": 150, \"increment\": 1, \"current\":";
+      content += String(rightForwardSpeed);
+      content += "},{ \"name\": \"leftBackwardSpeed\", \"displayname\": \"Left Backward Speed\", \"min\": 50, \"max\": 150, \"increment\": 1, \"current\":";
+      content += String(leftBackwardSpeed);
+      content += "},{ \"name\": \"rightBackwardSpeed\", \"displayname\": \"Right Backward Speed\", \"min\": 50, \"max\": 150, \"increment\": 1, \"current\":";
+      content += String(rightBackwardSpeed);
+      content +="}]}";
       return content;
     }
 
@@ -92,15 +123,18 @@ class Robot {
       playerNumber = 0;
       return;
     }
+
+  private:
+    int leftForwardSpeed, rightForwardSpeed, leftBackwardSpeed, rightBackwardSpeed;
 };
 
-// Defines the WiFi class
-class WiFi {
+// Defines the WiFiCommunication class
+class WiFiCommunication {
   private:
     String server, port, ssid, pass;
     String connection = "AT+CIPSTART=1,\"TCP\",\"";
     HardwareSerial& wifi;
-    Robot& bot;
+    Robot* bot;
     bool started = false;
     
     // Executes a move received by the bot
@@ -115,26 +149,26 @@ class WiFi {
           {
             case 0:
               // Left
-              bot.turn(1, magnitude);
+              bot->turn(1, magnitude);
               break;
             case 1:
               // Right
-              bot.turn(0, magnitude);
+              bot->turn(0, magnitude);
               break;
             case 2:
               // Forward
-              bot.driveForward(magnitude);
+              bot->driveForward(magnitude);
               break;
             case 3:
               // Backup
-              bot.driveBackward(magnitude);
+              bot->driveBackward(magnitude);
               break;
           }
         }
         else
         {
           // Robot trying to move, but is blocked
-          bot.blockedMove();
+          bot->blockedMove();
           delay(1000);    
         }
       }
@@ -145,7 +179,7 @@ class WiFi {
         {
           case 4:
             // Take damage
-            bot.takeDamage(magnitude);
+            bot->takeDamage(magnitude);
             break;
         }
         delay(1000);
@@ -168,7 +202,12 @@ class WiFi {
         {
           // This should really be a POST request, but GET is more reliable
           String message = "GET /Bot/Done?bot=";
-          message = message + bot.botNum + " HTTP/1.1\r\nHost: " + server + ":" + port + "\r\nConnection: close\r\n\r\n";
+          message += bot->botNum;
+          message += " HTTP/1.1\r\nHost: ";
+          message += server;
+          message += ":";
+          message += port;
+          message += "\r\nConnection: close\r\n\r\n";;
           String command = "AT+CIPSEND=1,";
           response = sendCommand(command + message.length(), F("\nOK"));
           if (response.indexOf(F("ERROR")) != -1)
@@ -214,7 +253,7 @@ class WiFi {
       if (instruction == 0) 
       {
         // Load the settings
-        String settings = bot.loadSettings();
+        String settings = bot->loadSettings();
         // Send the settings to the game server
         sendCommand("AT+CIPSEND=0," + String(settings.length()), F("\nOK"));
         sendCommand(settings, "CLOSED");
@@ -222,21 +261,21 @@ class WiFi {
       else if (instruction == 1) 
       {
         // Save the settings temporarily
-        bot.saveSettings(Message, false);
+        bot->saveSettings(Message, false);
         // Run a speed test
-        bot.speedTest();
+        bot->speedTest();
       }
       else if (instruction == 2) 
       {
         // Save the settings temporarily
-        bot.saveSettings(Message, false);
+        bot->saveSettings(Message, false);
         // Run a navigation test
-        bot.navigationTest();
+        bot->navigationTest();
       }
       else if (instruction == 3) 
       {
         // Save the settings persistently and exit setup mode
-        bot.saveSettings(Message, true);
+        bot->saveSettings(Message, true);
         inSetupMode = false;
       }     
     }
@@ -244,17 +283,20 @@ class WiFi {
   public:
     bool inSetupMode = false;
 
-    // Intialize the WiFi object with all necessary info
-    WiFi(HardwareSerial& SerialPort, String ServerIP, String ServerPort, String SSID, String WPA_Pass, Robot& Bot)
-    : wifi(SerialPort)
-    , server(ServerIP)
-    , port(ServerPort)
-    , ssid(SSID)
-    , pass(WPA_Pass)
-    , bot(Bot)
+    // Intialize the WiFi object
+    WiFiCommunication(HardwareSerial& SerialPort): wifi(SerialPort){}
+    // Setup WiFi object with all necessary info
+    void begin (String ServerIP, String ServerPort, String SSID, String WPA_Pass, Robot* Bot)
     {
+      server = ServerIP;
+      port = ServerPort;
+      ssid = SSID;
+      pass = WPA_Pass;
+      bot = Bot;
       // Build the connection string
-      connection = connection + server + "\"," + port;
+      connection += server;
+      connection +="\",";
+      connection += port;
     }
 
     // Sets up the robot, connecting to the Wi-Fi, informing the server of itself, and so on.
@@ -308,7 +350,14 @@ class WiFi {
         
           // Inform server of bot
           String message = "GET /Bot/Index?ip=";
-          message = message + client + "&name=" + bot.RobotName + " HTTP/1.1\r\nHost: " + server + ":" + port + "\r\nConnection: close\r\n\r\n";
+          message += client;
+          message += "&name=";
+          message += bot->RobotName;
+          message += " HTTP/1.1\r\nHost: ";
+          message += server;
+          message += ":";
+          message += port;
+          message += "\r\nConnection: close\r\n\r\n";
           String command = "AT+CIPSEND=1,";
           sendCommand(command + message.length(), F("\nOK"));  
           String response = sendCommand(message, F("AK\n"));
@@ -334,7 +383,7 @@ class WiFi {
             {
               // Bot received reset command
               started = false;
-              bot.reset();
+              bot->reset();
             }
             else
             {
@@ -357,9 +406,9 @@ class WiFi {
               // Parse message
               message = message.substring(message.indexOf(':') + 1);
               // Get assigned player
-              bot.playerAssigned(message[0] - '0');
+              bot->playerAssigned(message[0] - '0');
               // Get assigned bot number
-              bot.botNum = message.substring(1, message.indexOf('\n'));
+              bot->botNum = message.substring(1, message.indexOf('\n'));
               started = true;
             }
             else if (instruction == 1)
@@ -420,13 +469,17 @@ String Port = "8082";
 String RobotName = "Test%20Bot";
 
 // Create robot object
-Robot bot = Robot(RobotName);
+Robot bot;
 // Create wifi object
-WiFi wifi = WiFi(Serial, IP, Port, SSID, WPA_Pass, bot);
+WiFiCommunication wifi(Serial);
 
 void setup() {
   // Start the serial connection
   Serial.begin(115200);
+  // Setup robot
+  bot.begin();
+  // Setup WiFi
+  wifi.begin(IP, Port, SSID, WPA_Pass, &bot);
   // Initialize the WiFi module and connect to server
   while (!wifi.Startup()) {
     delay(1000);
