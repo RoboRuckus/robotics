@@ -34,7 +34,7 @@ class Robot {
     String RobotName, botNum;
     int robotColor = 0;
 
-    enum class colors { Red, Green, Blue, Yellow, White, Putple, Orange };
+    enum class colors { Red, Green, Blue, Yellow, Purple, Orange, White };
     enum class images { Clear, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Happy, Sad, Surprised, Duck };
 
     // Initialize robot
@@ -241,13 +241,13 @@ class Robot {
 
     // Color maps for display
     CRGB color_map[7] = {
-      CRGB(255, 0, 0),
-      CRGB(0, 255, 0),
-      CRGB(0, 0, 255),
-      CRGB(255, 128, 0),
-      CRGB(255, 0, 196),
-      CRGB(255, 96, 0),
-      CRGB(144, 144, 128)
+      CRGB(255, 0, 0),		// Red
+      CRGB(0, 255, 0),		// Green
+      CRGB(0, 0, 255),		// Blue
+      CRGB(255, 128, 0),	// Yellow
+      CRGB(255, 0, 196),	// Purple
+      CRGB(255, 96, 0),		// Orange
+      CRGB(144, 144, 128)	// White
     };
    
     // Takes a string and splits it by a deliminator and returns substring at desired index
