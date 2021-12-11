@@ -36,7 +36,7 @@ class Robot {
     int robotColor = 0;
   
     // Enums for display colors and images
-    enum class colors { Red, Green, Blue, Yellow, Purple, Orange, White };
+    enum class colors { Red, Green, Blue, Yellow, Purple, Orange, Cyan, White };
     enum class images { Clear, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Happy, Sad, Surprised, Duck };
 
     // Initialize robot
@@ -210,7 +210,6 @@ class Robot {
          * If it has, then increase the speed of one wheel until the
          * robot is back on course.
          */
-        Serial.println(gyroX);
         if (gyroX > drift) {
           rightSpeed = rightBackwardSpeed;
           leftSpeed = leftBackwardSpeed - driftBoost;
@@ -298,6 +297,7 @@ class Robot {
         EEPROM.writeInt(132, robotColor);
         EEPROM.commit();
       }
+	  showImage(images::Duck, (colors)robotColor);
     }
 
     /*
@@ -323,7 +323,7 @@ class Robot {
       content += String(driftBoost);
       content += "},{ \"name\": \"turnAngle\", \"displayname\": \"Turn Angle\", \"min\": 60, \"max\": 120, \"increment\": 0.5, \"current\":";
       content += String(turnAngle);
-      content += "},{ \"name\": \"robotColor\", \"displayname\": \"Color\", \"min\": 0, \"max\": 6, \"increment\": 1, \"current\":";
+      content += "},{ \"name\": \"robotColor\", \"displayname\": \"Color\", \"min\": 0, \"max\": 7, \"increment\": 1, \"current\":";
       content += String(robotColor);
       content +="}]}";
       return content;
@@ -390,13 +390,14 @@ class Robot {
     };
 
     // Color maps for display
-    CRGB color_map[7] = {
+    CRGB color_map[8] = {
       CRGB(255, 0, 0),		// Red
       CRGB(0, 255, 0),		// Green
       CRGB(0, 0, 255),		// Blue
       CRGB(255, 128, 0),	// Yellow
       CRGB(255, 0, 196),	// Purple
       CRGB(255, 96, 0),		// Orange
+	  CRGB(0, 196, 255),	// Cyan
       CRGB(144, 144, 128)	// White
     };
     

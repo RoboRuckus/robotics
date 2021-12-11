@@ -34,7 +34,7 @@ class Robot {
     String RobotName, botNum;
     int robotColor = 0;
 
-    enum class colors { Red, Green, Blue, Yellow, Purple, Orange, White };
+    enum class colors { Red, Green, Blue, Yellow, Purple, Orange, Cyan, White };
     enum class images { Clear, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Happy, Sad, Surprised, Duck };
 
     // Initialize robot
@@ -162,6 +162,7 @@ class Robot {
         EEPROM.writeInt(116, robotColor);
         EEPROM.commit();
       }
+	  showImage(images::Duck, (colors)robotColor);
     }
 
     /*
@@ -179,7 +180,7 @@ class Robot {
       content += String(leftBackwardSpeed);
       content += "},{ \"name\": \"rightBackwardSpeed\", \"displayname\": \"Right Backward Speed\", \"min\": 50, \"max\": 150, \"increment\": 1, \"current\":";
       content += String(rightBackwardSpeed);
-      content += "},{ \"name\": \"robotColor\", \"displayname\": \"Color\", \"min\": 0, \"max\": 6, \"increment\": 1, \"current\":";
+      content += "},{ \"name\": \"robotColor\", \"displayname\": \"Color\", \"min\": 0, \"max\": 7, \"increment\": 1, \"current\":";
       content += String(robotColor);
       content +="}]}";
       return content;
@@ -240,13 +241,14 @@ class Robot {
     };
 
     // Color maps for display
-    CRGB color_map[7] = {
+    CRGB color_map[8] = {
       CRGB(255, 0, 0),		// Red
       CRGB(0, 255, 0),		// Green
       CRGB(0, 0, 255),		// Blue
       CRGB(255, 128, 0),	// Yellow
       CRGB(255, 0, 196),	// Purple
       CRGB(255, 96, 0),		// Orange
+	  CRGB(0, 196, 255),	// Cyan
       CRGB(144, 144, 128)	// White
     };
    
