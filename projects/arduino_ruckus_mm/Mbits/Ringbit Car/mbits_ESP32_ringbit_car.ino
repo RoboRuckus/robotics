@@ -153,13 +153,13 @@ class Robot {
 
     // Called when the robot needs to drive forward
     void driveForward(int magnitude) {
-      // Calculate totla time needed for the move
+      // Calculate total time needed for the move
       int total = linearTime * magnitude;
       float gyroX;
       // Create a smart pointer to a new GyroHelper object. Smart pointer aids in deallocation
       std::unique_ptr<GyroHelper> helper(new GyroHelper(mpu6050));
-      int leftSpeed = leftForwardSpeed;
-      int rightSpeed = rightForwardSpeed;
+      int leftSpeed;
+      int rightSpeed;
       long start = millis();
       // Keep driving until time limit is reached
       while (millis() - start < total) {
@@ -194,13 +194,13 @@ class Robot {
 
     // Called when the robot needs to drive backward
     void driveBackward(int magnitude) {
-       // Calculate totla time needed for the move
+       // Calculate total time needed for the move
       int total = linearTime * magnitude;
       float gyroX;
       // Create a smart pointer to a new GyroHelper object. Smart pointer aids in deallocation
       std::unique_ptr<GyroHelper> helper(new GyroHelper(mpu6050));
-      int leftSpeed = leftBackwardSpeed;
-      int rightSpeed = rightBackwardSpeed;
+      int leftSpeed;
+      int rightSpeed;
       long start = millis();
       // Keep driving until time limit is reached
       while (millis() - start < total) {

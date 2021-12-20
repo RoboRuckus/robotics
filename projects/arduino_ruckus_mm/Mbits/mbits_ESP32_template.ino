@@ -101,7 +101,6 @@ class Robot {
      *  direction: 0 = right, 1 = left.
      */
     void turn(int direction, int magnitude){
-
       return;
     }
 
