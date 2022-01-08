@@ -16,8 +16,7 @@
  *
  * Contributors: Sam Groveman
  */
-
-#include <Arduino.h>
+ 
 #include "WiFi.h"
 #include <Wire.h>
 #include<EEPROM.h>
@@ -153,7 +152,7 @@ class Robot {
 
     // Called when the robot needs to drive forward
     void driveForward(int magnitude) {
-      // Calculate total time needed for the move
+      // Calculate totla time needed for the move
       int total = linearTime * magnitude;
       float gyroX;
       // Create a smart pointer to a new GyroHelper object. Smart pointer aids in deallocation
@@ -194,7 +193,7 @@ class Robot {
 
     // Called when the robot needs to drive backward
     void driveBackward(int magnitude) {
-       // Calculate total time needed for the move
+       // Calculate totla time needed for the move
       int total = linearTime * magnitude;
       float gyroX;
       // Create a smart pointer to a new GyroHelper object. Smart pointer aids in deallocation
@@ -297,7 +296,7 @@ class Robot {
         EEPROM.writeInt(132, robotColor);
         EEPROM.commit();
       }
-	  showImage(images::Duck, (colors)robotColor);
+      showImage(images::Duck, (colors)robotColor);
     }
 
     /*
@@ -391,14 +390,14 @@ class Robot {
 
     // Color maps for display
     CRGB color_map[8] = {
-      CRGB(255, 0, 0),		// Red
-      CRGB(0, 255, 0),		// Green
-      CRGB(0, 0, 255),		// Blue
-      CRGB(255, 128, 0),	// Yellow
-      CRGB(255, 0, 196),	// Purple
-      CRGB(255, 96, 0),		// Orange
-	  CRGB(0, 196, 255),	// Cyan
-      CRGB(144, 144, 128)	// White
+      CRGB(255, 0, 0),    // Red
+      CRGB(0, 255, 0),    // Green
+      CRGB(0, 0, 255),    // Blue
+      CRGB(255, 128, 0),  // Yellow
+      CRGB(255, 0, 196),  // Purple
+      CRGB(255, 96, 0),   // Orange
+      CRGB(0, 196, 255),  // Cyan
+      CRGB(144, 144, 128) // White
     };
     
     // Takes a string and splits it by a deliminator and returns substring at desired index
@@ -557,7 +556,6 @@ class WiFiCommunication {
       if (instruction != 0) {
         // Respond and close the connection
         client.print(F("OK"));
-
 
         // Parse the message
         Message = Message.substring(Message.indexOf(':') + 1);
@@ -757,7 +755,7 @@ WiFiCommunication wifi;
 void setup() {
   // Start the serial connection
   Serial.begin(115200);
-  Serial.println("Starting...");
+   Serial.println("Starting...");
   Wire.begin(22,21);
 
   //Initialize robot

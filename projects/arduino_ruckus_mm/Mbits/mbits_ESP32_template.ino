@@ -161,7 +161,7 @@ class Robot {
         EEPROM.writeInt(116, robotColor);
         EEPROM.commit();
       }
-	  showImage(images::Duck, (colors)robotColor);
+      showImage(images::Duck, (colors)robotColor);
     }
 
     /*
@@ -219,7 +219,7 @@ class Robot {
     MPU6050 mpu6050 = MPU6050(Wire);
     int BUZZER_PIN = 33;
     int BUZZER_CHANNEL = 0;
-	int leftForwardSpeed, rightForwardSpeed, rightBackwardSpeed, leftBackwardSpeed;
+    int leftForwardSpeed, rightForwardSpeed, rightBackwardSpeed, leftBackwardSpeed;
 
     // Image maps for display
     uint8_t image_maps[14][5] = {
@@ -247,7 +247,7 @@ class Robot {
       CRGB(255, 128, 0),	// Yellow
       CRGB(255, 0, 196),	// Purple
       CRGB(255, 96, 0),		// Orange
-	  CRGB(0, 196, 255),	// Cyan
+      CRGB(0, 196, 255),	// Cyan
       CRGB(144, 144, 128)	// White
     };
    
