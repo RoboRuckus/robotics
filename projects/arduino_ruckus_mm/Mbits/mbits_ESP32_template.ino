@@ -136,7 +136,7 @@ class Robot {
      * Called when a robot has new settings.
      * settings: a comma seprated list of new parameters.
      * commit: true when the settings should be saved to persistent storage like EEPROM.
-     * Should also update robot movement parameter varibles with new values.
+     * Should also update robot movement parameter variables with new values.
      */
     void saveSettings(String settings, bool commit) {
       // Prase settings string
@@ -165,7 +165,7 @@ class Robot {
     }
 
     /*
-     * Called when the robot neesd to load its settings.
+     * Called when the robot needs to load its settings.
      * Should return a JSON object of all the modifiable movement parameters.
      */
     String loadSettings(){
@@ -437,7 +437,7 @@ class WiFiCommunication {
             return false;
           }
 
-          // Get asigned IP
+          // Get assigned IP
           String client = WiFi.localIP().toString(); 
 
           // Start server

@@ -16,7 +16,7 @@
  *
  * Contributors: Sam Groveman
  */
- 
+
 #include "WiFi.h"
 #include <Wire.h>
 #include<EEPROM.h>
@@ -124,8 +124,8 @@ class Robot {
      *  direction: 0 = right, 1 = left.
      */
     void turn(int direction, int magnitude) {
-      // Calculate total trun degrees
-      int target = (turnAngle * magnitude) - 10; // The -10 seems to be a hack for the sensor to get acurate turns
+      // Calculate total turn degrees
+      int target = (turnAngle * magnitude) - 10; // The -10 seems to be a hack for the sensor to get accurate turns
       // Create a smart pointer to a new GyroHelper object. Smart pointer aids in deallocation
       std::unique_ptr<GyroHelper> helper(new GyroHelper(mpu6050));
       // Check direction of turn and activate motors appropriately.
@@ -152,7 +152,7 @@ class Robot {
 
     // Called when the robot needs to drive forward
     void driveForward(int magnitude) {
-      // Calculate totla time needed for the move
+      // Calculate total time needed for the move
       int total = linearTime * magnitude;
       float gyroX;
       // Create a smart pointer to a new GyroHelper object. Smart pointer aids in deallocation
@@ -193,7 +193,7 @@ class Robot {
 
     // Called when the robot needs to drive backward
     void driveBackward(int magnitude) {
-       // Calculate totla time needed for the move
+       // Calculate total time needed for the move
       int total = linearTime * magnitude;
       float gyroX;
       // Create a smart pointer to a new GyroHelper object. Smart pointer aids in deallocation
@@ -254,7 +254,7 @@ class Robot {
      * Called when a robot has new settings.
      * settings: a comma seprated list of new parameters.
      * commit: true when the settings should be saved to persistent storage like EEPROM.
-     * Should also update robot movement parameter varibles with new values.
+     * Should also update robot movement parameter variables with new values.
      */
     void saveSettings(String settings, bool commit) {
       // Prase settings string
@@ -300,7 +300,7 @@ class Robot {
     }
 
     /*
-     * Called when the robot neesd to load its settings.
+     * Called when the robot needs to load its settings.
      * Should return a JSON object of all the modifiable movement parameters.
      */
     String loadSettings() {
@@ -450,7 +450,7 @@ class Robot {
      */
     class GyroHelper {
       public:
-        // Intialize the helper using a the specific sensor
+        // Initialize the helper using a the specific sensor
         GyroHelper(MPU6050 &Gyro) : gyro(Gyro) {
           previousTime = millis();  
           gyro.update();        
@@ -628,7 +628,7 @@ class WiFiCommunication {
             return false;
           }
 
-          // Get asigned IP
+          // Get assigned IP
           String ip = WiFi.localIP().toString();
 
           // Start server
@@ -755,7 +755,7 @@ WiFiCommunication wifi;
 void setup() {
   // Start the serial connection
   Serial.begin(115200);
-   Serial.println("Starting...");
+  Serial.println("Starting...");
   Wire.begin(22,21);
 
   //Initialize robot
