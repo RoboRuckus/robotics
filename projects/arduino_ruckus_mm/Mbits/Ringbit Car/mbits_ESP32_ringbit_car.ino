@@ -523,7 +523,7 @@ class WiFiCommunication {
           delay(1000);    
         }
       }
-      // Non-movment command
+      // Non-movement command
       else 
       {
         switch(movement)
