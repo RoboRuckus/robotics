@@ -16,7 +16,7 @@ namespace Mbits
     class MPU6050
     {
         /// <summary>
-        /// Total gyroscope measurement range in degrees/sec
+        /// Total gyroscope measurement range in degrees/sec.
         /// </summary>
         public enum GyroRange
         {
@@ -27,7 +27,7 @@ namespace Mbits
         }
 
         /// <summary>
-        /// Total accelerometer range in g
+        /// Total accelerometer range in g.
         /// </summary>
         public enum AccelRange
         {
@@ -49,7 +49,7 @@ namespace Mbits
         private float _totalXDegrees = 0, _totalYDegrees = 0, _totalZDegrees = 0;
 
         /// <summary>
-        /// Register map
+        /// Register map.
         /// </summary>
         private enum register
         {
@@ -69,10 +69,10 @@ namespace Mbits
         /// 
         /// Appropriate I2C pins should already be configured.
         /// </summary>
-        /// <param name="i2cbus">The bus the device is connected to</param>
-        /// <param name="address">The address of the device</param>
-        /// <param name="gyroConfig">The gyro range to use</param>
-        /// <param name="accelConfig">The accelerometer range to use</param>
+        /// <param name="i2cbus">The bus the device is connected to.</param>
+        /// <param name="address">The address of the device.</param>
+        /// <param name="gyroConfig">The gyro range to use.</param>
+        /// <param name="accelConfig">The accelerometer range to use.</param>
         public MPU6050(int i2cbus = 1, int address = 0x68, GyroRange gyroConfig = GyroRange.TwoFifty, AccelRange accelConfig = AccelRange.Two)
         {
             // Create the device
@@ -126,7 +126,7 @@ namespace Mbits
         /// this process.
         /// </summary>
         /// <exception cref="SystemException">Thrown if there is an error retrieving measurement data.</exception>
-        /// <returns>An array wit the X, Y, and Z offsets.</returns>
+        /// <returns>An array with the x, y, and z offsets.</returns>
         public float[] calcGyroOffsets()
         {
             float x = 0, y = 0, z = 0;
@@ -189,7 +189,7 @@ namespace Mbits
         /// <summary>
         /// Get the current gyroscope reading.
         /// </summary>
-        /// <returns>A float array with x, y, z gyroscope values.</returns>
+        /// <returns>An array with x, y, z gyroscope values.</returns>
         /// <exception cref="SystemException">Thrown if there is an error retrieving measurement data.</exception>
         public float[] getGyro()
         {
@@ -215,7 +215,7 @@ namespace Mbits
         /// <summary>
         /// Get the current accelerometer reading.
         /// </summary>
-        /// <returns>A float array with x, y, z accelerometer values.</returns>
+        /// <returns>An array with x, y, z accelerometer values.</returns>
         /// <exception cref="SystemException">Thrown if there is an error retrieving measurement data.</exception>
         public float[] getAccel()
         {
@@ -242,7 +242,7 @@ namespace Mbits
         /// <summary>
         /// Get the current temperature reading.
         /// </summary>
-        /// <returns>Degrees C</returns>
+        /// <returns>Degrees C.</returns>
         /// <exception cref="SystemException">Thrown if there is an error retrieving measurement data.</exception>
         public float getTemp()
         {
@@ -264,7 +264,7 @@ namespace Mbits
         /// Gets the total number of degrees rotated since the
         /// start of the interval timer.
         /// </summary>
-        /// <returns>A float array with x, y, z total degree values</returns>
+        /// <returns>A float array with x, y, z total degree values.</returns>
         public float[] getGyroDegrees()
         {
             // Get the gyro readings
