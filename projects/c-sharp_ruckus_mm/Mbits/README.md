@@ -1,11 +1,11 @@
 # RoboRuckus/MicroMayham C# Mbits
 
-Here you'll find the relevant robot code to connect a C# and [nanoFramewoek](https://www.nanoframework.net/) based robot to the [RoboRuckus game](https://www.roboruckus.com/). RoboRuckus makes use of the [ESP32 Mbits platform](https://www.elecrow.com/mbits.html). Other ESP32 platforms may work, but they have not been tested. You'll find both the template for the Mbits microcontroller platform and any tested robot platforms here which also use the Mbits controller. 
+Here you'll find the relevant robot code to connect a C# and [nanoFramewoek](https://www.nanoframework.net/) based robot to the [RoboRuckus game](https://www.roboruckus.com/). RoboRuckus makes use of the [ESP32 Mbits platform](https://www.elecrow.com/mbits.html). Other ESP32 platforms may work, but they have not been tested. You'll find both the template for the Mbits microcontroller platform and any tested robot platforms here which also use the Mbits controller.
 
 ## Deploying
 1. Open the code in the [Visual Studio](https://docs.microsoft.com/en-us/visualstudio/install/install-visual-studio?view=vs-2022).
 2. Install the nanoFramework extension for [Visual Studio](https://docs.nanoframework.net/content/getting-started-guides/getting-started-managed.html).
-3. Flash the firmware to your platform with [nanoff] (https://docs.nanoframework.net/content/getting-started-guides/getting-started-managed.html#uploading-the-firmware-to-the-board-using-nanofirmwareflasher)
+3. Flash the firmware to your platform with [nanoff](https://docs.nanoframework.net/content/getting-started-guides/getting-started-managed.html#uploading-the-firmware-to-the-board-using-nanofirmwareflasher)
 4. Download the folder with the solution you want for your platform or robot.
 5. Open the solution in Visual Studio
 6. Modify the code as needed.
