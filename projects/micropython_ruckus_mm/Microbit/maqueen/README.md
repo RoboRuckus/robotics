@@ -1,4 +1,4 @@
-# RoboRuckus/MicroMayham
+# RoboRuckus/MicroMayham Maqueen
 
 Here you'll find the relevant robot code to connect a Maqueen robot to the [RoboRuckus game](https://www.roboruckus.com/).
 

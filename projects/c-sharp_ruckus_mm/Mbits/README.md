@@ -1,65 +1,37 @@
-# RoboRuckus/MicroMayham Arduino
+# RoboRuckus/MicroMayham C# Mbits
 
-Here you'll find the relevant robot code to connect an Arduino based robot to the [RoboRuckus game](https://www.roboruckus.com/).
+Here you'll find the relevant robot code to connect a C# and [nanoFramewoek](https://www.nanoframework.net/) based robot to the [RoboRuckus game](https://www.roboruckus.com/). RoboRuckus makes use of the [ESP32 Mbits platform](https://www.elecrow.com/mbits.html). Other ESP32 platforms may work, but they have not been tested. You'll find both the template for the Mbits microcontroller platform and any tested robot platforms here which also use the Mbits controller. 
 
 ## Deploying
-1. Open the code in the [Arduino IDE](https://www.arduino.cc/en/Guide) or IDE of choice.
-2. Copy the contents of the [template](https://github.com/tagnw/robotics/blob/main/projects/arduino_ruckus_mm/ruckus_mm_template.ino) to the IDE.
-3. Modify the code to suit your robot (details below).
-4. Flash to your robot.
-5. Enjoy!
-
-## Wiring up Wi-Fi Module
-RoboRuckus makes use of the [ESP8266 Wi-Fi module](https://www.sparkfun.com/products/17146), specifically the ESP-01S version of the module. Wire the Wi-Fi module to the Arduino in the following way:
-
-```
-ESP ------ Arduino
-TX  ------ RX (Pin D0 on Arduino Uno)
-RX  ------ TX (Pin D1 on Arduino Uno)
-3V3 ------ 3V3
-GND ------ GND
-```
+1. Open the code in the [Visual Studio](https://docs.microsoft.com/en-us/visualstudio/install/install-visual-studio?view=vs-2022).
+2. Install the nanoFramework extension for [Visual Studio](https://docs.nanoframework.net/content/getting-started-guides/getting-started-managed.html).
+3. Flash the firmware to your platform with [nanoff] (https://docs.nanoframework.net/content/getting-started-guides/getting-started-managed.html#uploading-the-firmware-to-the-board-using-nanofirmwareflasher)
+4. Download the folder with the solution you want for your platform or robot.
+5. Open the solution in Visual Studio
+6. Modify the code as needed.
+7. Deploy or debug your code on your platform.
+8. Enjoy!
 
 ## Template Structure
-The template has three parts starting from the top
+The template has three parts:
 ### The Robot Class
-This class contains all the relevant robot code needed to control the robot itself. These are the methods:
-#### playerAssigned(int player)
-Called when a player is assigned to the robot. Modify this to display the player number if desired.
-#### turn(int direction, int magnitude)
+This class contains all the relevant robot code needed to control the robot itself. These are the methods you will need to modify:
+#### Turn(int magnitude, int direction, int outOfTurn)
 Called when the robot needs to turn. Modify to get your robot to turn to the correct magnitude of 90 degree incriments.
-#### driveForward(int magnitude)
-Called when the robot needs to move forward. Modify to get your robot t move forward the correct magnitude of spaces.
-#### driveBackward(int magnitude)
+#### DriveForward(int magnitude, int outOfTurn)
+Called when the robot needs to move forward. Modify to get your robot to move forward the correct magnitude of spaces.
+#### DriveBackward(int magnitude, int outOfTurn)
 Called when the robot needs to move backward. Modify to get your robot to move backward the correct magnitude of spaces.
-#### blockedMove()
-Optionally, modify this to have the robot react if it instructed to move but is blacked by, for example, a wall.
-#### takeDamage(int amount)
-Optionally, modify this to have your robot react to taking damage. Amount is the total amount of damage suffered so far.
-
-#### saveSettings(String settings, bool commit)
-Modify this so that it saves movement and tuning parameters to the robot, optionally committing to persistent storage like EEPROM. See details on the structure of these settings strings below.
-
-#### loadSettings()
+#### pdateSettings(SettingsEventArgs e)
+Modify this so that it saves movement and tuning parameters to the robot, optionally committing to persistent storage. See details on the structure of these settings strings below.
+#### GetSettings(SettingsEventArgs e)
 Modify this so it loads all the modifiable robot tuning and movement parameters to a JSON object which it returns. For more details on the JSON object, see below.
-
-#### speedTest()
-Drives the robot forwards and backwards to test moving in a straight line.
-
-#### navigationTest()
-Runs a navigation test to see how the robot performs.
-
-#### reset()
-Called when the game is reset. Modify to do whatever is needed to return to the initial state.
 
 ### The WiFi class
 This class handles all the communication to the game server and parses and interprets messages from the game server. It shouldn't be necessary to modify this class as most everything should be handled by the Robot class.
 
-### Arduino setup() and loop()
-
-Towards the bottom you'll find the places where the WiFi and Robot classes are initialized and the parameters (such as WiFI SSID and password) that they use. You should update these parameters to match what you are using. You should also include any robot specific setup code here for your robot design.
-
-The loop function shouldn't need modification unless specific to your robot design. It will continually check for a message from the server and then pass it to the WiFi class for processing.
+### Program class
+This class contains all the parameters and settings to connect to Wi-Fi and the game server, as well as GPIO pin configurtations. Modify as needed.
 
 ### Custom Tuning Options
 When a robot is not assigned to a player and receives a `1:` message from the game server, it will enter tuning mode. There it will wait for further instructions of the form `option:data` where `option` is an instruction as described in the below table. The `data` portion is addressed below the table.
