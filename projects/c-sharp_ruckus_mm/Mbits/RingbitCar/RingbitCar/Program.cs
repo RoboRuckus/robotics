@@ -79,6 +79,7 @@ namespace RingbitCar
                     _robot.DriveForward(1, 0);
                     Thread.Sleep(250);
                     _robot.Turn(1, 0, 0);
+                    Thread.Sleep(250);
                 }
             }
 
