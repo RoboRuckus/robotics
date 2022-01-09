@@ -5,7 +5,7 @@ Here you'll find the relevant robot code to connect a C# and [nanoFramewoek](htt
 ## Deploying
 1. Open the code in the [Visual Studio](https://docs.microsoft.com/en-us/visualstudio/install/install-visual-studio?view=vs-2022).
 2. Install the nanoFramework extension for [Visual Studio](https://docs.nanoframework.net/content/getting-started-guides/getting-started-managed.html).
-3. Flash the firmware to your platform with [nanoff](https://docs.nanoframework.net/content/getting-started-guides/getting-started-managed.html#uploading-the-firmware-to-the-board-using-nanofirmwareflasher)
+3. Flash the firmware to your platform with [nanoff](https://docs.nanoframework.net/content/getting-started-guides/getting-started-managed.html#uploading-the-firmware-to-the-board-using-nanofirmwareflasher).
 4. Download the folder with the solution you want for your platform or robot.
 5. Open the solution in Visual Studio
 6. Modify the code as needed.
@@ -22,7 +22,7 @@ Called when the robot needs to turn. Modify to get your robot to turn to the cor
 Called when the robot needs to move forward. Modify to get your robot to move forward the correct magnitude of spaces.
 #### DriveBackward(int magnitude, int outOfTurn)
 Called when the robot needs to move backward. Modify to get your robot to move backward the correct magnitude of spaces.
-#### pdateSettings(SettingsEventArgs e)
+#### UpdateSettings(SettingsEventArgs e)
 Modify this so that it saves movement and tuning parameters to the robot, optionally committing to persistent storage. See details on the structure of these settings strings below.
 #### GetSettings(SettingsEventArgs e)
 Modify this so it loads all the modifiable robot tuning and movement parameters to a JSON object which it returns. For more details on the JSON object, see below.
