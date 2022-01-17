@@ -33,7 +33,7 @@ namespace RingbitCar
         private int _buttonApin = 36, _buttonBpin = 39, _leftPin = 32, _rightPin = 25;
         GpioPin _buttonA, _buttonB;
         GpioController _gpio = new GpioController();
-        PixelController _display;
+        PixelController _display, _front;
         private images _currentImage;
         private bool _connected = false, _demoMode = false;
 
@@ -96,8 +96,10 @@ namespace RingbitCar
             _SPIFFS = KnownFolders.InternalDevices.GetFolders()[0];
 
             // Initialize LEDs
-            _display = new PixelController(13, 25); // Pin 13, 25 LEDs
+            _display = new PixelController(13, 25); // Screen, Pin 13, 25 LEDs
+            _front = new PixelController(26, 2); // Front, Pin 26, 2 LEDs
             _display.TurnOff();
+            _front.TurnOff();
 
             // Load settings
             StorageFile file = null;
@@ -593,6 +595,7 @@ namespace RingbitCar
         private void showImage(images image, colors color, bool saveImage = false)
         {
             Display(image_maps[(int)image], color_map[(int)color], _display);
+            Front(color_map[(int)color], _front);
             if (saveImage)
                 _currentImage = image;
         }
@@ -620,6 +623,18 @@ namespace RingbitCar
                     }
                 }
             }
+            controller.UpdatePixels();
+        }
+
+        /// <summary>
+        /// Updates the front LEDs
+        /// </summary>
+        /// <param name="color">the R,G,B color as a byte array.</param>
+        /// <param name="controller">The PixelController that the LEDs are on.</param>
+        private void Front(byte[] color, PixelController controller)
+        {
+            controller.SetColor(0, color[0], color[1], color[2]);
+            controller.SetColor(1, color[0], color[1], color[2]);
             controller.UpdatePixels();
         }
     }
