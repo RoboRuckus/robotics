@@ -254,11 +254,11 @@ class Robot {
     // Takes a string and splits it by a deliminator and returns substring at desired index
     String getValue(String data, char separator, int index) {
       int found = 0;
-      // Create array to hold indices that bound the substring found between deliminators
+      // Create array to hold indices that bound the substring found between delimiters
       int strIndex[] = {0, -1};
       int maxIndex = data.length()-1;
 
-      // Look for substring between deliminators
+      // Look for substring between delimiters
       for(int i=0; i <= maxIndex && found <= index; i++) {
         if(data.charAt(i) == separator || i == maxIndex) {
             found++;
