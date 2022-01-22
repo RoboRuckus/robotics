@@ -2,7 +2,7 @@
 
 Here you'll find the relevant robot code to connect a C# and [nanoFramewoek](https://www.nanoframework.net/) based robot to the [RoboRuckus game](https://www.roboruckus.com/). This code is for the [ESP32 Mbits platform](https://www.elecrow.com/mbits.html) and the [Ring:bit Car V2](https://www.elecfreaks.com/ring-bit-car-v2-for-micro-bit.html).
 
-##Deploying
+## Deploying
 Please see the Mbits template for deployment instructions.
 
 When deploying the firmware, use this command:
@@ -11,7 +11,7 @@ When deploying the firmware, use this command:
 nanoff --update --target ESP32_PSRAM_REV0 --serialport COM3 --preview -fwversion 1.7.3-preview.225
 ```
 
-##Wiring up the Ring:bit Car
+## Wiring up the Ring:bit Car
 Connect the servo and bottom expansion board to the back connectiors as follows:
 | Device | Connector |
 | ----------- | ----------- |
