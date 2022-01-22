@@ -490,6 +490,7 @@ namespace Mbits
 
         /// <summary>
         /// Pushes colors to a set of WS2812 LEDs.
+        /// Adapted from https://www.elecrow.com/wiki/index.php?title=Mbits#Use_with_Mbits-RGB_Matrix
         /// </summary>
         /// <param name="image">The byte array encoding the image.</param>
         /// <param name="color">the R,G,B color as a byte array.</param>

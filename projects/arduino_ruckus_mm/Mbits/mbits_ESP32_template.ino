@@ -271,6 +271,7 @@ class Robot {
     }
 
     // Displays an image on the LED screen
+    // Adapted from https://www.elecrow.com/wiki/index.php?title=Mbits#Use_with_Mbits-RGB_Matrix
     void Display(uint8_t dat[], CRGB myRGBcolor){
       for (int c = 0; c < 5; c++)
       {
