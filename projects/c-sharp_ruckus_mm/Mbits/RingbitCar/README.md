@@ -8,7 +8,7 @@ Please see the Mbits template for deployment instructions.
 When deploying the firmware, use this command:
 
 ```
-nanoff --update --target ESP32_PSRAM_REV0 --serialport COM3 --preview -fwversion 1.7.3-preview.225
+nanoff --update --target ESP32_PSRAM_REV0 --serialport COM3 --preview --fwversion 1.7.3-preview.225
 ```
 
 Substituting `COM3` with the COM port of your Mbits.
