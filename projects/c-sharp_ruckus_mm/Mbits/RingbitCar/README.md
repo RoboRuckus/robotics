@@ -11,6 +11,8 @@ When deploying the firmware, use this command:
 nanoff --update --target ESP32_PSRAM_REV0 --serialport COM3 --preview -fwversion 1.7.3-preview.225
 ```
 
+Substituting `COM3` with the COM port of your Mbits.
+
 ## Wiring up the Ring:bit Car
 Connect the servo and bottom expansion board to the back connectiors as follows:
 | Device | Connector |
