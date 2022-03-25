@@ -588,6 +588,11 @@ class MaqueenPlus:
 
         # Save new settings to file system
         if commit:
+            # Try to remove the file first if it exists
+            try:
+                os.remove("settings.txt")
+            except:
+                pass
             # Write text file
             with open('settings.txt', 'w') as settings_file:
                 settings_file.write(NewSettings)
@@ -598,7 +603,7 @@ class MaqueenPlus:
         if not initialize:
             # Create JSON string from current settings
             content = '''{"name": "''' + RobotName + '''", "controls": [
-            { "name": "LinearSpeedTarget", "displayname": "Speed", "min": 50, "max": 150, "increment": 1, "current": ''' + str(LinearSpeedTarget) + '''},
+            { "name": "LinearSpeedTarget", "displayname": "Speed of wheels", "min": 50, "max": 150, "increment": 1, "current": ''' + str(LinearSpeedTarget) + '''},
             { "name": "LinearTime", "displayname": "Max travel time (ms)", "min": 800, "max": 1500, "increment": 10, "current": ''' + str(LinearTime) + '''},
             { "name": "LinearDistance", "displayname": "Travel distance", "min": 0.2, "max": 1.2, "increment": 0.01, "current": ''' + str(LinearDistance) + '''},
             { "name": "TurnDistance", "displayname": "Turn distance", "min": 0.1, "max": 1.2, "increment": 0.01, "current": ''' + str(TurnDistance) + '''},
@@ -613,14 +618,10 @@ class MaqueenPlus:
                 settings = RobotName + "," + str(LinearSpeedTarget) + "," + str(LinearTime) + "," + str(LinearDistance) + "," + str(TurnDistance) + "," + str(Color) + "," + str(Left_Forward_Speed) + "," + str(Left_Backward_Speed) + "," + str(Right_Forward_Speed) + "," + str(Right_Backward_Speed) + ":"
                 self.SaveSettings(settings, True, True)
             else:
-                # Try to remove the file first if it exists
-                try:
-                    os.remove("settings.txt")
-                except:
-                    pass
-                # Write text file
-                with open('settings.txt', 'w') as settings_file:
-                    settings_file.write(NewSettings)
+                # Load saved settings
+                with open('settings.txt') as settings_file:
+                    content = settings_file.readline()
+                self.SaveSettings(content + ":", False, True)
 
     # Run the motors and calibrate their speeds
     def CalibrateSpeed(self):
