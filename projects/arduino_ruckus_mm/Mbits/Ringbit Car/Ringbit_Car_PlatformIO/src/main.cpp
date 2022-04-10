@@ -738,16 +738,6 @@ class WiFiCommunication {
     }
 };
 
-// Create the robot object
-Robot bot;
-// Create wifi object
-WiFiCommunication wifi;
-//flag for saving data
-bool shouldSaveConfig = false;
-DNSServer dns;
-// Create webserver object
-AsyncWebServer server(80);
-
 // Text of update webpage
 String indexPage = "<!DOCTYPE html>\
 <html lang='en-us'>\
@@ -862,6 +852,15 @@ bool shouldReboot = false;
 // Pin with button to reset WiFi settings (hold for ~5 seconds on boot to reset)
 const int RESET_PIN = 36;
 
+// Create the robot object
+Robot bot;
+// Create wifi object
+WiFiCommunication wifi;
+//flag for saving data
+bool shouldSaveConfig = false;
+// Create webserver object
+AsyncWebServer server(80);
+
 // Callback notifying us of the need to save config
 void saveConfigCallback() {
   Serial.println("Should save config");
@@ -878,6 +877,7 @@ void setup() {
   pinMode(RESET_PIN, INPUT_PULLUP);
 
   // Local initialization. Once its business is done, there is no need to keep it around
+  DNSServer dns;
   AsyncWiFiManager wifiManager(&server,&dns);
 
   // Start the serial connection
@@ -999,8 +999,8 @@ void setup() {
 
   // Start update server
   Serial.println("Starting update server");
-  server.end();
   server.reset();
+  server.end();
 
   MDNS.begin("Web-Update.local");
   // Add requests
