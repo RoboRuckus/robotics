@@ -608,7 +608,7 @@ class WiFiCommunication {
     
   public:
     bool inSetupMode = false;
-    WiFiServer server = WiFiServer(8080);
+    WiFiServer botserver = WiFiServer(8080);
     WiFiClient client;
 
     // Initialize WiFi object
@@ -627,7 +627,7 @@ class WiFiCommunication {
           String ip = WiFi.localIP().toString();
 
           // Start server
-          server.begin();
+          botserver.begin();
         
           // Inform server of bot
           String message = "GET /Bot/Index?ip=";
@@ -806,16 +806,16 @@ String indexPage = "<!DOCTYPE html>\
 window.addEventListener('load', uprog.init);\
 </script>\
 <style>\
-#message{font-size:18px;font-weight:bolder;}\
-#up-file, #up-label{width:100%;height:44px;border-radius:4px;margin:10px auto;font-size:17px}\
-#up-label {background:#f1f1f1;border:0;display:block;line-height:44px}\
+#message{font-size:18px;font-weight:bolder}\
+#up-file,#up-label{width:100%;height:44px;border-radius:4px;margin:10px auto;font-size:17px}\
+#up-label{background:#f1f1f1;border:0;display:block;line-height:44px}\
 body{background:#3498db;font-family:sans-serif;font-size:14px;color:#777}\
 #up-file{padding:0;border:1px solid #ddd;line-height:44px;text-align:left;display:block;cursor:pointer}\
-#up-bar,#up-progress{background-color:#f1f1f1;border-radius:10px; position:relative}\
+#up-bar,#up-progress{background-color:#f1f1f1;border-radius:10px;position:relative}\
 #up-bar{background-color:#3498db;width:0%;height:30px}\
 #up-wrap{background:#fff;max-width:258px;margin:75px auto;padding:30px;border-radius:5px;text-align:center}\
 #up-label{background:#3498db;color:#fff;cursor:pointer}\
-#up-percent{position:absolute;top:6px;left:0;width:100%;display:flex;align-items:center;justify-content:center;text-shadow:-1px 1px 0 #000,1px 1px 0 #000,1px -1px 0 #000,-1px -1px 0 #000;color:#FFF}</style>\
+#up-percent{position:absolute;top:6px;left:0;width:100%;display:flex;align-items:center;justify-content:center;text-shadow:-1px 1px 0 #000,1px 1px 0 #000,1px -1px 0 #000,-1px -1px 0 #000;color:#fff}</style>\
 </body>\
 </html>";
 
@@ -1041,7 +1041,7 @@ void loop() {
     delay(3000);
     ESP.restart();
   }
-  wifi.client = wifi.server.available();
+  wifi.client = wifi.botserver.available();
   if (wifi.client) // Check if the WiFi server has a message
   {
     if (wifi.client.connected()) 
