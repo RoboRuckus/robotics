@@ -11,7 +11,7 @@
  * External libraries needed:
  * FastLED https://github.com/FastLED/FastLED
  * Temperature_LM75_Derived: https://github.com/jeremycole/Temperature_LM75_Derived <-- Not currently used
- * Tone32: https://github.com/lbernstone/Tone32
+ * Tone32: https://github.com/lbernstone/Tone32 <-- Not currently used
  * MPU6050_tockn: https://github.com/Tockn/MPU6050_tockn
  * AsyncTCP: https://github.com/esphome/AsyncTCP
  * ESPAsyncWebServer: https://github.com/esphome/ESPAsyncWebServer
@@ -30,10 +30,14 @@
 #include <SPIFFS.h>
 #include <Wire.h>
 #include <FastLED.h>
-#include <Tone32.h>
 #include <MPU6050_tockn.h>
 #include <ESP32Servo.h>
 #include <ESPmDNS.h>
+
+// Global function declarations (ther's probable a better way to handle this)
+void updateServerStart();
+void updateServerStop();
+void onUpdate(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final);
 
 // Defines the robot class
 class Robot {
@@ -653,6 +657,8 @@ class WiFiCommunication {
             {
               // Bot received reset command
               started = false;
+			  // Restart the update server
+              updateServerStart();
               bot->reset();
             }
             else
@@ -679,6 +685,8 @@ class WiFiCommunication {
               bot->playerAssigned(message[0] - '0');
               // Get assigned bot number
               bot->botNum = message.substring(1, message.indexOf('\n'));
+              // Stop the update server while robot is in the game and ready to play
+              updateServerStop();
               started = true;
             }
             else if (instruction == 1)
@@ -737,6 +745,8 @@ class WiFiCommunication {
       return response;
     }
 };
+
+/* Global variables */
 
 // Text of update webpage
 String indexPage = "<!DOCTYPE html>\
@@ -818,6 +828,62 @@ body{background:#3498db;font-family:sans-serif;font-size:14px;color:#777}\
 #up-percent{position:absolute;top:6px;left:0;width:100%;display:flex;align-items:center;justify-content:center;text-shadow:-1px 1px 0 #000,1px 1px 0 #000,1px -1px 0 #000,-1px -1px 0 #000;color:#fff}</style>\
 </body>\
 </html>";
+  
+// For dynamic game server settings
+char game_server[40] = "192.168.3.1";
+char game_port[6] = "8082";
+
+// Reboot on firmware update flag
+bool shouldReboot = false;
+
+// Pin with button to reset WiFi settings (hold for ~5 seconds on boot to reset)
+const int RESET_PIN = 36;
+
+// Create the robot object
+Robot bot;
+// Create wifi object
+WiFiCommunication wifi;
+// Flag for saving data
+bool shouldSaveConfig = false;
+// Create webserver object
+AsyncWebServer server(80);
+
+/* Global functions */
+
+// Starts the update server
+void updateServerStart() {
+  Serial.println("Starting update server");
+
+  MDNS.begin("Web-Update.local");
+  // Add requests
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/html", indexPage);
+  });
+
+  // Upload a file
+  server.on("/update", HTTP_POST, [](AsyncWebServerRequest *request) {
+    shouldReboot = !Update.hasError();
+    AsyncWebServerResponse *response = request->beginResponse(200, "text/plain", shouldReboot?"OK":"FAIL");
+    response->addHeader("Connection", "close");
+    request->send(response);
+  }, onUpdate);
+
+  server.onNotFound([](AsyncWebServerRequest *request) {
+    request->send(404);
+  });
+
+  server.begin();
+  MDNS.addService("http", "tcp", 80);
+
+}
+
+// Stops the update server
+void updateServerStop() {
+  Serial.println("Stopping update server");
+  server.reset();
+  server.end();
+  MDNS.end();
+}
 
 // Handle firmware update
 void onUpdate(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final){
@@ -841,25 +907,6 @@ void onUpdate(AsyncWebServerRequest *request, String filename, size_t index, uin
     }
   }
 }
-  
-// For dynamic game server settings
-char game_server[40] = "192.168.3.1";
-char game_port[6] = "8082";
-
-// Reboot on firmware update flag
-bool shouldReboot = false;
-
-// Pin with button to reset WiFi settings (hold for ~5 seconds on boot to reset)
-const int RESET_PIN = 36;
-
-// Create the robot object
-Robot bot;
-// Create wifi object
-WiFiCommunication wifi;
-//flag for saving data
-bool shouldSaveConfig = false;
-// Create webserver object
-AsyncWebServer server(80);
 
 // Callback notifying us of the need to save config
 void saveConfigCallback() {
@@ -997,31 +1044,8 @@ void setup() {
   }
   IPAddress IP(ip[0], ip[1], ip[2], ip[3]);
 
-  // Start update server
-  Serial.println("Starting update server");
-  server.reset();
-  server.end();
-
-  MDNS.begin("Web-Update.local");
-  // Add requests
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/html", indexPage);
-  });
-
-  // Upload a file
-  server.on("/update", HTTP_POST, [](AsyncWebServerRequest *request) {
-    shouldReboot = !Update.hasError();
-    AsyncWebServerResponse *response = request->beginResponse(200, "text/plain", shouldReboot?"OK":"FAIL");
-    response->addHeader("Connection", "close");
-    request->send(response);
-  }, onUpdate);
-
-  server.onNotFound([](AsyncWebServerRequest *request) {
-    request->send(404);
-  });
-
-  server.begin();
-  MDNS.addService("http", "tcp", 80);
+  // Start the update server
+  updateServerStart();
 
   // Initialize the WiFi module and connect to server
   wifi.begin(IP, Port, &bot);
