@@ -1044,6 +1044,9 @@ void setup() {
   }
   IPAddress IP(ip[0], ip[1], ip[2], ip[3]);
 
+  // Clear server settings just in case
+  updateServerStop();
+  
   // Start the update server
   updateServerStart();
 
