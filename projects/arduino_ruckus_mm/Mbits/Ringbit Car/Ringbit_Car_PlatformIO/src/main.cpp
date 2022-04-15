@@ -457,8 +457,10 @@ class Robot {
 
     // Show color on front LEDs
     void showColor(CRGB myRGBcolor) {
-      frontLED[0] = myRGBcolor;
-      frontLED[1] = myRGBcolor;
+      for (int i = 0; i < frontLED.len; i++)
+      {
+        frontLED[i] = myRGBcolor;
+      }
       FastLED.show();
     }
 
@@ -657,7 +659,7 @@ class WiFiCommunication {
             {
               // Bot received reset command
               started = false;
-			  // Restart the update server
+              // Restart the update server
               updateServerStart();
               bot->reset();
             }
@@ -1043,10 +1045,10 @@ void setup() {
     ip[3] = 1;
   }
   IPAddress IP(ip[0], ip[1], ip[2], ip[3]);
-
+  
   // Clear server settings just in case
   updateServerStop();
-  
+
   // Start the update server
   updateServerStart();
 
@@ -1065,6 +1067,7 @@ void loop() {
   if (shouldReboot) {
     Serial.println("Firmware updated, rebooting...");
     bot.showImage(Robot::images::Check, (Robot::colors)bot.robotColor);
+    // Delay to show image and let server send reponse
     delay(3000);
     ESP.restart();
   }
