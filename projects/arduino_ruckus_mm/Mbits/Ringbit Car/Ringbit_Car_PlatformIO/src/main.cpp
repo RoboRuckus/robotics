@@ -449,10 +449,9 @@ class Robot {
             // Set the LED color at the given column and row
             leds[c * 5 + 4-r] = myRGBcolor;
           }
-          FastLED.show();
-          delay(5);
         }
       }
+      FastLED.show();
     }
 
     // Show color on front LEDs
@@ -539,7 +538,6 @@ class WiFiCommunication {
         {
           // Robot trying to move, but is blocked
           bot->blockedMove();
-          delay(1000);    
         }
       }
       // Non-movement command
@@ -552,7 +550,6 @@ class WiFiCommunication {
             bot->takeDamage(magnitude);
             break;
         }
-        delay(1000);
       }
       // Forces a response to the server, resets the WiFi on fail
       String response = "ERROR";
@@ -1068,7 +1065,7 @@ void loop() {
     Serial.println("Firmware updated, rebooting...");
     bot.showImage(Robot::images::Check, (Robot::colors)bot.robotColor);
     // Delay to show image and let server send reponse
-    delay(3000);
+    delay(5000);
     ESP.restart();
   }
   wifi.client = wifi.botserver.available();
