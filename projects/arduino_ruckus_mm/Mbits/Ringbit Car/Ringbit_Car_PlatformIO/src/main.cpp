@@ -45,6 +45,7 @@ class Robot {
   #define NUM_FRONT_LEDS  2
   #define RIGHT_SERVO_PIN 25
   #define LEFT_SERVO_PIN  32
+  
   public:
     // Robot variables
     int playerNumber = 0;
@@ -409,7 +410,6 @@ class Robot {
     // Robot movement parameters 
     int leftForwardSpeed, rightForwardSpeed, rightBackwardSpeed, leftBackwardSpeed, linearTime, driftBoost, drift;
     float turnAngle;
-
 
     // Image maps for display. Binary maps for each row, 1 on, 0 off.
     uint8_t image_maps[15][5] = {
