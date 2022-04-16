@@ -96,28 +96,37 @@ class Robot {
       // Attempt to load saved values
       if (SPIFFS.begin()) {
         Serial.println("Mounted file system");
-        if (SPIFFS.exists("/robot_config.txt")) {
+        if (SPIFFS.exists("/robot_config.txt")) 
+        {
           // File exists, reading and loading
           Serial.println("Reading robot config file");
           File configFile = SPIFFS.open("/robot_config.txt", "r");
-          if (configFile) {
+          if (configFile) 
+          {
             Serial.println("Opened robot config file, loading settings");
             String settings = "";
             // Read file
-            while(configFile.available()){
+            while(configFile.available())
+            {
               settings += configFile.readString();
             }
             configFile.close();
             Serial.println("Settings loaded: " + settings);
             // Apply loaded settings
             saveSettings(settings, false);            
-          } else {
+          } 
+          else 
+          {
             Serial.println("Robot config file could not be opened");
           }
-        } else {
+        }
+        else 
+        {
           Serial.println("Robot config file not found");
         }
-      } else {
+      } 
+      else 
+      {
         Serial.println("Failed to mount FS");
         // Clean FS
         Serial.println("Formatting SPIFFS, this will take a while, please wait...");
@@ -151,20 +160,24 @@ class Robot {
       // Create a smart pointer to a new GyroHelper object. Smart pointer aids in deallocation
       std::unique_ptr<GyroHelper> helper(new GyroHelper(mpu6050));
       // Check direction of turn and activate motors appropriately.
-      if (direction == 0) {
+      if (direction == 0)
+      {
         left.write(leftForwardSpeed);
         right.write(rightBackwardSpeed);
       }
-      else if (direction == 1) {
+      else if (direction == 1)
+      {
         left.write(leftBackwardSpeed);
         right.write(rightForwardSpeed);
       }
-      else {
+      else
+      {
         // Bad command, exit.
         return;
       }
       // Keep turning until target angle is met
-      while (abs(helper->getAngle()) < target) {
+      while (abs(helper->getAngle()) < target)
+      {
         delay(20);
       }
       // Stop motors      
@@ -183,18 +196,21 @@ class Robot {
       int rightSpeed;
       long start = millis();
       // Keep driving until time limit is reached
-      while (millis() - start < total) {
+      while (millis() - start < total) 
+      {
         gyroX = helper->getAngle();
         /*
          * Check if the robot has drifted of course using the gyro.
          * If it has, then increase the speed of one wheel until the
          * robot is back on course.
          */
-        if (gyroX > drift) {
+        if (gyroX > drift)
+        {
           rightSpeed = rightForwardSpeed - driftBoost;
           leftSpeed = leftForwardSpeed;
         }
-        else if (gyroX < -drift) {
+        else if (gyroX < -drift) 
+        {
           rightSpeed = rightForwardSpeed;
           leftSpeed = leftForwardSpeed + driftBoost;
         }
@@ -304,12 +320,15 @@ class Robot {
       robotColor = getValue(settings_clean, ',', 9).toInt();
       
       // Save values to file
-      if (commit){
+      if (commit)
+      {
         Serial.println("Saving config");
         File configFile = SPIFFS.open("/robot_config.txt", "w");
         if (!configFile) {
           Serial.println("Failed to open config file for writing");
-        } else {
+        }
+        else
+        {
           configFile.print(settings);
           configFile.close();     
         }
@@ -427,10 +446,11 @@ class Robot {
 
       // Look for substring between delimiters
       for(int i=0; i <= maxIndex && found <= index; i++) {
-        if(data.charAt(i) == separator || i == maxIndex) {
+        if(data.charAt(i) == separator || i == maxIndex) 
+        {
             found++;
-            strIndex[0] = strIndex[1]+1;
-            strIndex[1] = (i == maxIndex) ? i+1 : i;
+            strIndex[0] = strIndex[1] + 1;
+            strIndex[1] = (i == maxIndex) ? i + 1 : i;
         }
       }
       // If a substring was found at the desired index return it, else return an empty string
@@ -495,7 +515,6 @@ class Robot {
         long previousTime;
         float interval = 0;
         float totalAngle = 0;
-
     };
 };
 
@@ -509,7 +528,7 @@ class WiFiCommunication {
     
     // Executes a move received by the bot
     void executeMove(uint8_t movement, uint8_t magnitude, uint8_t outOfTurn) {
-    if (movement <= 3)
+      if (movement <= 3)
       {
         // Standard movement
         if (magnitude > 0)
@@ -563,13 +582,14 @@ class WiFiCommunication {
       } while (response.indexOf(F("ERROR")) != -1);
     }
 
-    // Receives and prcesses commands while in setup mode
+    // Receives and processes commands while in setup mode
     void setupMode(String Message) {
       // Prase instruction
       int instruction = Message.substring(0, Message.indexOf(':')).toInt();
 
       // Check if a response is needed here
-      if (instruction != 0) {
+      if (instruction != 0)
+      {
         // Respond and close the connection
         client.print(F("OK"));
 
@@ -626,120 +646,126 @@ class WiFiCommunication {
 
     // Sets up the robot, connecting to the Wi-Fi, informing the server of itself, and so on.
     bool Startup() {
-          // Get assigned IP
-          String ip = WiFi.localIP().toString();
+      // Get assigned IP
+      String ip = WiFi.localIP().toString();
 
-          // Start server
-          botserver.begin();
-        
-          // Inform server of bot
-          String message = "GET /Bot/Index?ip=";
-          message = message + ip + "&name=" + bot->RobotName + " HTTP/1.1\r\nHost: " + serverIP.toString() + ":" + String(port) + "\r\nConnection: close\r\n\r\n"; 
-          String response = sendCommand(message, F("AK\n"));
-          if (response.indexOf(F("ERROR")) != -1)
-          {
-            return false;
-          }        
-          return true;
+      // Start server
+      botserver.begin();
+    
+      // Inform server of bot
+      String message = "GET /Bot/Index?ip=";
+      message = message + ip + "&name=" + bot->RobotName + " HTTP/1.1\r\nHost: " + serverIP.toString() + ":" + String(port) + "\r\nConnection: close\r\n\r\n"; 
+      String response = sendCommand(message, F("AK\n"));
+      if (response.indexOf(F("ERROR")) != -1)
+      {
+        return false;
+      }        
+      return true;
+    }
+
+    // Processes a message from the game server
+    void MessageReceived (String message) {
+      // Check if in setup mode
+      if (!inSetupMode)
+      {
+        // Respond
+        client.print(F("OK"));
+      }		  
+      // Check if game is already started
+      if (started) 
+      {
+        // Parse movement instruction
+        uint8_t movement = message[0] - '0';   // Convert char to int
+        uint8_t magnitude = message[1] - '0';  // Convert char to int
+        uint8_t outOfTurn = message[2] - '0';  // Convert char to int
+        if (outOfTurn == 2)
+        {
+          // Bot received reset command
+          started = false;
+          // Restart the update server
+          updateServerStart();
+          bot->reset();
         }
-
-        // Processes a message from the game server
-        void MessageReceived (String message) {
-          // Check if game is already started
-          if (started)
-          {
-            // Parse movement instruction
-            uint8_t movement = message[0] - '0';   // Convert char to int
-            uint8_t magnitude = message[1] - '0';  // Convert char to int
-            uint8_t outOfTurn = message[2] - '0';  // Convert char to int
-            if (outOfTurn == 2)
-            {
-              // Bot received reset command
-              started = false;
-              // Restart the update server
-              updateServerStart();
-              bot->reset();
-            }
-            else
-            {
-              // Bot received move order
-              executeMove(movement, magnitude, outOfTurn);
-            }
-          }
-          // Check if in setup mode
-          else if (inSetupMode)
-          {
-            setupMode(message);            
-          }
-          else
-          {
-            // Prase instruction, has the format instruction:message
-            int instruction = message.substring(0, message.indexOf(':')).toInt();
-            // Bot has been assigned to player
-            if (instruction == 0)
-            {
-              // Parse message
-              message = message.substring(message.indexOf(':') + 1);
-              // Get assigned player
-              bot->playerAssigned(message[0] - '0');
-              // Get assigned bot number
-              bot->botNum = message.substring(1, message.indexOf('\n'));
-              // Stop the update server while robot is in the game and ready to play
-              updateServerStop();
-              started = true;
-            }
-            else if (instruction == 1)
-            {
-              // Enter setup mode
-              inSetupMode = true;
-              bot->showImage(Robot::images::Duck, (Robot::colors)bot->robotColor);
-            }
-          }
+        else
+        {
+          // Bot received move order
+          executeMove(movement, magnitude, outOfTurn);
+        }
       }
-
-      /* Send message through WiFi module
-      * message is the message to send (blank for read data back)
-      * EoT is the End of Tranmission string that indicates
-      * to stop reading. ERROR will always terminate.
-      * If EoT is an empty string, the message will be sent
-      * but the method won't wait for a response.
-      * The method will timeout after ~8 seconds of not finding EoT or ERROR
-      */
-      String sendCommand(String message, String EoT) {
-        String response = "";
-        if (message != "")
+      // Check if in setup mode
+      else if (inSetupMode)
+      {
+        setupMode(message);            
+      }
+      else
+      {
+        // Prase instruction, has the format instruction:message
+        int instruction = message.substring(0, message.indexOf(':')).toInt();
+        // Bot has been assigned to player
+        if (instruction == 0)
         {
-          if (client.connect(serverIP, port))
-          {
-            client.print(message);
-            delay(5);
-          }
-          else 
-          {
-            return "ERROR";  
-          }
+          // Parse message
+          message = message.substring(message.indexOf(':') + 1);
+          // Get assigned player
+          bot->playerAssigned(message[0] - '0');
+          // Get assigned bot number
+          bot->botNum = message.substring(1, message.indexOf('\n'));
+          // Stop the update server while robot is in the game and ready to play
+          updateServerStop();
+          started = true;
         }
-        // Check if reading from module
-        if (EoT != F(""))
+        else if (instruction == 1)
         {
-          int i = 0;
-          // Read until the end EoT string is found, or timeout
-          while (response.indexOf(F("ERROR")) == -1 && response.indexOf(EoT) == -1 && i < 8000)
+          // Enter setup mode
+          inSetupMode = true;
+          bot->showImage(Robot::images::Duck, (Robot::colors)bot->robotColor);
+        }
+      }
+    }
+
+    /* Send message through WiFi module
+    * message is the message to send (blank for read data back)
+    * EoT is the End of Tranmission string that indicates
+    * to stop reading. ERROR will always terminate.
+    * If EoT is an empty string, the message will be sent
+    * but the method won't wait for a response.
+    * The method will timeout after ~8 seconds of not finding EoT or ERROR
+    */
+    String sendCommand(String message, String EoT) {
+      String response = "";
+      if (message != "")
+      {
+        if (client.connect(serverIP, port))
+        {
+          client.print(message);
+          delay(5);
+        }
+        else 
+        {
+          return "ERROR";  
+        }
+      }
+      // Check if reading from module
+      if (EoT != F(""))
+      {
+        int i = 0;
+        // Read until the end EoT string is found, or timeout
+        while (response.indexOf(F("ERROR")) == -1 && response.indexOf(EoT) == -1 && i < 8000)
+        {
+          while (client.available())
           {
-            while (client.available())
-            {
-              // Read from module
-              response += (char)client.read();
-            }
-            i++;
-            delay(1);
+            // Read from module
+            response += (char)client.read();
           }
-          client.stop();
-          if (i == 8000)
-          {
-            // Timed out
-            return F("ERROR");
-          }
+          i++;
+          delay(1);
+        }
+        client.stop();
+        if (i == 8000)
+        {
+          // Timed out
+          return F("ERROR");
+        }
       }
       return response;
     }
@@ -852,7 +878,6 @@ AsyncWebServer server(80);
 // Starts the update server
 void updateServerStart() {
   Serial.println("Starting update server");
-
   MDNS.begin("Web-Update.local");
   // Add requests
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
@@ -886,22 +911,30 @@ void updateServerStop() {
 
 // Handle firmware update
 void onUpdate(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final){
-  if(!index){
+  if(!index)
+  {
     Serial.printf("Update Start: %s\n", filename.c_str());
     // Ensure firmware will fit into flash space
-    if(!Update.begin((ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000)){
+    if(!Update.begin((ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000))
+    {
       Update.printError(Serial);
     }
   }
-  if(!Update.hasError()){
-    if(Update.write(data, len) != len){
+  if(!Update.hasError())
+  {
+    if(Update.write(data, len) != len)
+    {
       Update.printError(Serial);
     }
   }
-  if(final){
-    if(Update.end(true)){
+  if(final)
+  {
+    if(Update.end(true))
+    {
       Serial.printf("Update Success: %uB\n", index+len);
-    } else {
+    } 
+    else
+    {
       Update.printError(Serial);
     }
   }
@@ -914,7 +947,7 @@ void saveConfigCallback() {
 }
 
 // Callback notifying that the access point has started
-void configModeCallback(AsyncWiFiManager *myWiFiManager) {
+void configModeCallback(AsyncWiFiManager *myWiFiManager){
   Serial.println("Access point started");
   bot.showImage(Robot::images::Duck, (Robot::colors)bot.robotColor);
 }
@@ -935,7 +968,8 @@ void setup() {
   bot.begin();
 
   // Check for reset
-  if (digitalRead(RESET_PIN) == LOW) {
+  if (digitalRead(RESET_PIN) == LOW)
+  {
     Serial.println("Resetting WiFi");
     wifiManager.resetSettings();
     bot.showImage(Robot::images::Check, (Robot::colors)bot.robotColor);
@@ -945,11 +979,13 @@ void setup() {
  
   // SPIFFS should already be mounted by robot class
   // Load settings and check for WiFi config
-  if (SPIFFS.exists("/wifi_config.json")) {
+  if (SPIFFS.exists("/wifi_config.json"))
+  {
     // File exists, reading and loading
     Serial.println("Reading WiFi config file");
     File configFile = SPIFFS.open("/wifi_config.json", "r");
-    if (configFile) {
+    if (configFile)
+    {
       Serial.println("Opened WiFi config file");
       size_t size = configFile.size();
       // Allocate a buffer to store contents of the file.
@@ -961,11 +997,14 @@ void setup() {
       DeserializationError result = deserializeJson(json, buf);
       // Print to serial port what was loaded
       serializeJson(json, Serial);
-      if (result.code() == DeserializationError::Ok) {
+      if (result.code() == DeserializationError::Ok)
+      {
         Serial.println("\nParsed json");
         strcpy(game_server, json["game_server"]);
         strcpy(game_port, json["game_port"]);
-      } else {
+      }
+      else
+      {
         Serial.println("Failed to load WiFi config");
       }
     }
@@ -994,7 +1033,8 @@ void setup() {
   // Fetches ssid and password and tries to connect
   // if it does not connect it starts an access point with the specified name
   // and goes into a blocking loop awaiting configuration
-  if (!wifiManager.autoConnect(AP_ssid, "RuckusBot")) {
+  if (!wifiManager.autoConnect(AP_ssid, "RuckusBot"))
+  {
     Serial.println("Failed to connect and hit timeout");
     delay(3000);
     //reset and try again, or maybe put it to deep sleep
@@ -1007,16 +1047,20 @@ void setup() {
   strcpy(game_port, custom_game_port.getValue());
 
   // Save the custom parameters to file
-  if (shouldSaveConfig) {
+  if (shouldSaveConfig) 
+  {
     Serial.println("Saving WiFi config");
     StaticJsonDocument<256> json;
     json["game_server"] = game_server;
     json["game_port"] = game_port;
 
     File configFile = SPIFFS.open("/wifi_config.json", "w");
-    if (!configFile) {
+    if (!configFile)
+    {
       Serial.println("Failed to open WiFi config file for writing");
-    } else {
+    }
+    else
+    {
       serializeJson(json, configFile);
       configFile.close();
     }
@@ -1027,13 +1071,15 @@ void setup() {
   // There's probably a better way to do this
   String server_port = String(game_port);
   int server_port_int = server_port.toInt();
-  if (server_port_int != 0) {
+  if (server_port_int != 0) 
+  {
     Port = server_port_int;
   }
 
   Serial.println("Parsing saved port and IP");
   byte ip[4];
-  if (sscanf(game_server, "%hhu.%hhu.%hhu.%hhu", ip, ip+1, ip+2, ip+3) != 4) {
+  if (sscanf(game_server, "%hhu.%hhu.%hhu.%hhu", ip, ip+1, ip+2, ip+3) != 4) 
+  {
     Serial.print("Invalid IP: ");
     Serial.println(game_server);
     ip[0] = 192;
@@ -1051,7 +1097,8 @@ void setup() {
 
   // Initialize the WiFi module and connect to server
   wifi.begin(IP, Port, &bot);
-  while (!wifi.Startup() && !shouldReboot) {
+  while (!wifi.Startup() && !shouldReboot) 
+  {
     bot.showImage(Robot::images::Sad, (Robot::colors)bot.robotColor);
     delay(1000);
   }
@@ -1061,7 +1108,8 @@ void setup() {
 
 void loop() {
   // Check for firmware update requiring a reboot
-  if (shouldReboot) {
+  if (shouldReboot) 
+  {
     Serial.println("Firmware updated, rebooting...");
     bot.showImage(Robot::images::Check, (Robot::colors)bot.robotColor);
     // Delay to show image and let server send reponse
@@ -1080,11 +1128,6 @@ void loop() {
         // Read from module
         message += (char)wifi.client.read();
         delay(5);
-      }
-      // Check if in setup mode
-      if (!wifi.inSetupMode) {
-        // Respond
-        wifi.client.print(F("OK"));
       }
       // Pass message to WiFi object for processing
       wifi.MessageReceived(message);
