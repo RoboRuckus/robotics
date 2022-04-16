@@ -34,13 +34,17 @@
 #include <ESP32Servo.h>
 #include <ESPmDNS.h>
 
-// Global function declarations (ther's probable a better way to handle this)
+// Global function declarations (there's probably a better way to handle this)
 void updateServerStart();
 void updateServerStop();
 void onUpdate(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final);
 
 // Defines the robot class
 class Robot {
+  #define FRONT_LEDS_PIN  26
+  #define NUM_FRONT_LEDS  2
+  #define RIGHT_SERVO_PIN 25
+  #define LEFT_SERVO_PIN  32
   public:
     // Robot variables
     int playerNumber = 0;
@@ -58,7 +62,7 @@ class Robot {
       Serial.println("Initializing robot");
       // Start LEDs
       FastLED.addLeds<WS2812B, 13, GRB>(leds, 25);
-      FastLED.addLeds<WS2812B, 26, GRB>(frontLED, 2);
+      FastLED.addLeds<WS2812B, FRONT_LEDS_PIN, GRB>(frontLED, NUM_FRONT_LEDS);
       FastLED.setBrightness(10);
       FastLED.clear();
       delay(50);
@@ -78,8 +82,8 @@ class Robot {
       // Attach servos
       left.setPeriodHertz(50);  // Standard 50hz servo
       right.setPeriodHertz(50); 
-      left.attach(32, 500, 2500); // pin 32, min pulse, max pulse
-      right.attach(25, 500, 2500);
+      left.attach(LEFT_SERVO_PIN, 500, 2500); // pin, min pulse, max pulse
+      right.attach(RIGHT_SERVO_PIN, 500, 2500);
 
       // Set default settings values
       RobotName = "Test%20Bot";
@@ -393,12 +397,13 @@ class Robot {
 
   private:
     CRGBArray<25> leds;
-    CRGBArray<2> frontLED;
+    CRGBArray<NUM_FRONT_LEDS> frontLED;
     // Temperature sensor not currently used
     // Generic_LM75 Tmp75Sensor;
     MPU6050 mpu6050 = MPU6050(Wire);
-    int BUZZER_PIN = 33;
-    int BUZZER_CHANNEL = 0;
+    // Buzzer not currently used
+    // int BUZZER_PIN = 33;
+    // int BUZZER_CHANNEL = 0;
     Servo left, right;
 
     // Robot movement parameters 
@@ -898,7 +903,6 @@ void updateServerStart() {
 
   server.begin();
   MDNS.addService("http", "tcp", 80);
-
 }
 
 // Stops the update server
