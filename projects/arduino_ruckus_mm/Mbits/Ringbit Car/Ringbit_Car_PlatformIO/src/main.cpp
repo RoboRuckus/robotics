@@ -1136,7 +1136,7 @@ void loop() {
   // Check if the calibrate gyro button was pushed
   if (digitalRead(RESET_PIN) == LOW)
   {
-    bot.showImage(Robot::images::Check, (Robot::colors)bot.robotColor, false);
+    bot.showImage(Robot::images::Duck, (Robot::colors)bot.robotColor, false);
     bot.calibrateGyro();
     bot.showImage(bot.currentImage, (Robot::colors)bot.robotColor);
   }
