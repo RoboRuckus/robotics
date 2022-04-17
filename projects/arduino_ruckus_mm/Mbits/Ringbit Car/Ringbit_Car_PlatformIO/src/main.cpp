@@ -51,11 +51,13 @@ class Robot {
     int playerNumber = 0;
     String RobotName, botNum;
     int robotColor = 0;
+
   
     // Enums for display colors and images
     enum class colors { Red, Green, Blue, Yellow, Purple, Orange, Cyan, White };
     enum class images { Clear, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Happy, Sad, Surprised, Duck, Check };
-
+    images currentImage;
+    
     // Initialize robot
     Robot(){}
     // Actually initialize robot with call to begin method
@@ -71,8 +73,7 @@ class Robot {
 
       // Start IMU
       mpu6050.begin();
-      mpu6050.calcGyroOffsets(true, 1000, 2000);
-      Serial.println("");
+      calibrateGyro();
 
       // Start servos
       // Allow allocation of all timers
@@ -148,7 +149,12 @@ class Robot {
     }
 
     // Display an image in a color on the screen
-    void showImage(images image, colors color) {
+    void showImage(images image, colors color, bool cache = true) {
+      // Save current image
+      if (cache && currentImage != image)
+      { 
+        currentImage = image;
+      }
       FastLED.clear();
       delay(10);
       Display(image_maps[(int)image], color_map[(int)color]);
@@ -395,6 +401,12 @@ class Robot {
       showImage(images::Happy, (colors)robotColor);
       return;
     }
+
+    // Calibrates the gyroscope offsets
+    void calibrateGyro() {
+      mpu6050.calcGyroOffsets(true, 2000, 1000);
+      Serial.println("");
+    } 
 
   private:
     CRGBArray<25> leds;
@@ -1120,6 +1132,15 @@ void loop() {
     delay(5000);
     ESP.restart();
   }
+
+  // Check if the calibrate gyro button was pushed
+  if (digitalRead(RESET_PIN) == LOW)
+  {
+    bot.showImage(Robot::images::Check, (Robot::colors)bot.robotColor, false);
+    bot.calibrateGyro();
+    bot.showImage(bot.currentImage, (Robot::colors)bot.robotColor);
+  }
+
   wifi.client = wifi.botserver.available();
   if (wifi.client) // Check if the WiFi server has a message
   {
