@@ -56,7 +56,7 @@ class Robot {
     // Enums for display colors and images
     enum class colors { Red, Green, Blue, Yellow, Purple, Orange, Cyan, White };
     enum class images { Clear, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Happy, Sad, Surprised, Duck, Check };
-    images currentImage;
+    images currentImage = images::Clear;
     
     // Initialize robot
     Robot(){}
@@ -881,6 +881,9 @@ bool shouldReboot = false;
 // Pin with button to reset WiFi settings (hold for ~5 seconds on boot to reset)
 const int RESET_PIN = 36;
 
+// Push button anytime after connecting to game server to calibrate gyro
+const int CALIBRATE_PIN = 36;
+
 // Create the robot object
 Robot bot;
 // Create wifi object
@@ -1134,7 +1137,7 @@ void loop() {
   }
 
   // Check if the calibrate gyro button was pushed
-  if (digitalRead(RESET_PIN) == LOW)
+  if (digitalRead(CALIBRATE_PIN) == LOW)
   {
     bot.showImage(Robot::images::Duck, (Robot::colors)bot.robotColor, false);
     bot.calibrateGyro();
