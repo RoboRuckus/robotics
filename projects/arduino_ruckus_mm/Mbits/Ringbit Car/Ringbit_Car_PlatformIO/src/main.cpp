@@ -791,6 +791,7 @@ class WiFiCommunication {
 /* Global variables */
 
 // Text of update webpage
+// TODO: consider precompiler minification?
 String indexPage = "<!DOCTYPE html>\
 <html lang='en-us'>\
 <head>\
