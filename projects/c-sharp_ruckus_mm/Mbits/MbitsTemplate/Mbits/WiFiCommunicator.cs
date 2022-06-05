@@ -16,9 +16,9 @@ namespace Mbits
     {
         // Custom event delegates
         public delegate void PlayerAssignedHandler(int playerNumber);
-        public delegate void DriveForwardHandler(int magnitude, int outOfTurn);
-        public delegate void DriveBackwardHandler(int magnitude, int outOfTur);
-        public delegate void TurnHandler(int magnitude, int direction, int outOfTur);
+        public delegate void DriveForwardHandler(int magnitude, int lateralMove);
+        public delegate void DriveBackwardHandler(int magnitude, int lateralMove);
+        public delegate void TurnHandler(int magnitude, int direction, int lateralMove);
         public delegate void TakeDamageHandler(int amount);
         public delegate void SetupModeHandler(bool exiting);
         public delegate void GetSettingsHandler(SettingsEventArgs e);
@@ -211,20 +211,20 @@ namespace Mbits
                 {
                     byte movement = 0;
                     byte magnitude = 0;
-                    byte outOfTurn = 0;
+                    byte lateralMove = 0;
                     // Parse movement instruction
                     try
                     {
                         movement = byte.Parse(message.Substring(0, 1));
                         magnitude = byte.Parse(message.Substring(1, 1));
-                        outOfTurn = byte.Parse(message.Substring(2, 1));
+                        lateralMove = byte.Parse(message.Substring(2, 1));
                     }
                     catch
                     {
                         Debug.WriteLine("Bad message format");
                         return;
                     }
-                    if (outOfTurn == 2)
+                    if (lateralMove == 2)
                     {
                         // Bot received reset command
                         _started = false;
@@ -234,7 +234,7 @@ namespace Mbits
                     else
                     {
                         // Bot received move order
-                        ExecuteMove(movement, magnitude, outOfTurn);
+                        ExecuteMove(movement, magnitude, lateralMove);
                     }
                 }
                 else
@@ -277,8 +277,8 @@ namespace Mbits
         /// </summary>
         /// <param name="movement">The type of movement.</param>
         /// <param name="magnitude">The magnitude of the movement.</param>
-        /// <param name="outOfTurn">If the robot is moving not on its turn.</param>
-        private void ExecuteMove(byte movement, byte magnitude, byte outOfTurn)
+        /// <param name="lateralMove">If the robot is moving laterally if able.</param>
+        private void ExecuteMove(byte movement, byte magnitude, byte lateralMove)
         {
             if (movement <= 3)
             {
@@ -289,19 +289,19 @@ namespace Mbits
                     {
                         case 0:
                             // Left
-                            Turn?.Invoke(magnitude, 1, outOfTurn);
+                            Turn?.Invoke(magnitude, 1, lateralMove);
                             break;
                         case 1:
                             // Right
-                            Turn?.Invoke(magnitude, 0, outOfTurn);
+                            Turn?.Invoke(magnitude, 0, lateralMove);
                             break;
                         case 2:
                             // Forward
-                            DriveForward?.Invoke(magnitude, outOfTurn);
+                            DriveForward?.Invoke(magnitude, lateralMove);
                             break;
                         case 3:
                             // Backup
-                            DriveBackward?.Invoke(magnitude, outOfTurn);
+                            DriveBackward?.Invoke(magnitude, lateralMove);
                             break;
                     }
                 }

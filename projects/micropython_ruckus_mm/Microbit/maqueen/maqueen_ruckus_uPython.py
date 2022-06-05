@@ -134,15 +134,15 @@ class WiFi:
             # Parse message
             Movement = int(message[0])
             Magnitude = int(message[1])
-            OutOfTurn = int(message[2])
+            LateralMove = int(message[2])
 
             # Check for reset command
-            if OutOfTurn == 2:
+            if LateralMove == 2:
                 Assigned = False
                 display.show(Image.HAPPY)
             else:
                 # Process a move order
-                self.ProcessMove(Movement, Magnitude, OutOfTurn)
+                self.ProcessMove(Movement, Magnitude, LateralMove)
         elif InSetupMode:
             self.SetupMode(message)
         else:
@@ -160,7 +160,7 @@ class WiFi:
                 display.show(Image.DUCK)
                 InSetupMode = True
 
-    def ProcessMove(self, Movement: int, Magnitude: int, OutOfTurn: int):
+    def ProcessMove(self, Movement: int, Magnitude: int, LateralMove: int):
         if Movement <= 3:
             # Standard movement
             if Magnitude > 0:

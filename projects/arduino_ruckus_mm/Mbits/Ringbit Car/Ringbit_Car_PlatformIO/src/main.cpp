@@ -51,6 +51,9 @@ class Robot {
     int playerNumber = 0;
     String RobotName, botNum;
     int robotColor = 0;
+    
+    //If robot supports lateral movement
+    String lateral = "true";
 
   
     // Enums for display colors and images
@@ -544,7 +547,7 @@ class WiFiCommunication {
     bool started = false;
     
     // Executes a move received by the bot
-    void executeMove(uint8_t movement, uint8_t magnitude, uint8_t outOfTurn) {
+    void executeMove(uint8_t movement, uint8_t magnitude, uint8_t lateralMove) {
       if (movement <= 3)
       {
         // Standard movement
@@ -671,7 +674,7 @@ class WiFiCommunication {
     
       // Inform server of bot
       String message = "GET /Bot/Index?ip=";
-      message = message + ip + "&name=" + bot->RobotName + " HTTP/1.1\r\nHost: " + serverIP.toString() + ":" + String(port) + "\r\nConnection: close\r\n\r\n"; 
+      message = message + ip + "&name=" + bot->RobotName + "&lateralMovement=" + bot->lateral + " HTTP/1.1\r\nHost: " + serverIP.toString() + ":" + String(port) + "\r\nConnection: close\r\n\r\n"; 
       String response = sendCommand(message, F("AK\n"));
       if (response.indexOf(F("ERROR")) != -1)
       {
@@ -694,8 +697,8 @@ class WiFiCommunication {
         // Parse movement instruction
         uint8_t movement = message[0] - '0';   // Convert char to int
         uint8_t magnitude = message[1] - '0';  // Convert char to int
-        uint8_t outOfTurn = message[2] - '0';  // Convert char to int
-        if (outOfTurn == 2)
+        uint8_t lateralMove = message[2] - '0';  // Convert char to int
+        if (lateralMove == 2)
         {
           // Bot received reset command
           started = false;
@@ -706,7 +709,7 @@ class WiFiCommunication {
         else
         {
           // Bot received move order
-          executeMove(movement, magnitude, outOfTurn);
+          executeMove(movement, magnitude, lateralMove);
         }
       }
       // Check if in setup mode
@@ -870,7 +873,7 @@ body{background:#3498db;font-family:sans-serif;font-size:14px;color:#777}\
 #up-percent{position:absolute;top:6px;left:0;width:100%;display:flex;align-items:center;justify-content:center;text-shadow:-1px 1px 0 #000,1px 1px 0 #000,1px -1px 0 #000,-1px -1px 0 #000;color:#fff}</style>\
 </body>\
 </html>";
-  
+
 // For dynamic game server settings
 char game_server[40] = "192.168.3.1";
 char game_port[6] = "8082";
@@ -1131,7 +1134,7 @@ void loop() {
   {
     Serial.println("Firmware updated, rebooting...");
     bot.showImage(Robot::images::Check, (Robot::colors)bot.robotColor);
-    // Delay to show image and let server send reponse
+    // Delay to show image and let server send response
     delay(5000);
     ESP.restart();
   }

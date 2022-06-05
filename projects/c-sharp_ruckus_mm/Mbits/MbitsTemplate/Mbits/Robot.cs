@@ -270,8 +270,8 @@ namespace Mbits
         /// Has the robot drive forward.
         /// </summary>
         /// <param name="magnitude">The number of spaces to drive forward.</param>
-        /// <param name="outOfTurn">If the move is not on the robot's turn.</param>
-        public void DriveForward(int magnitude, int outOfTurn)
+        /// <param name="lateralMove">If the robot is moving laterally if able.</param>
+        public void DriveForward(int magnitude, int lateralMove)
         {
             
         }
@@ -280,8 +280,8 @@ namespace Mbits
         /// Has the drive backward.
         /// </summary>
         /// <param name="magnitude">The number of spaces to drive.</param>
-        /// <param name="outOfTurn">If the move is not on the robot's turn.</param>
-        public void DriveBackward(int magnitude, int outOfTurn)
+        /// <param name="lateralMove">If the robot is moving laterally if able.</param>
+        public void DriveBackward(int magnitude, int lateralMove)
         {
             
         }
@@ -291,8 +291,8 @@ namespace Mbits
         /// </summary>
         /// <param name="magnitude">The number of 90 degree segments to turn.</param>
         /// <param name="direction">The direction of the turn. 0 = right, 1 = left.</param>
-        /// <param name="outOfTurn">If the move is not on the robot's turn.</param>
-        public void Turn(int magnitude, int direction, int outOfTurn)
+        /// <param name="lateralMove">If the robot is moving laterally if able.</param>
+        public void Turn(int magnitude, int direction, int lateralMove)
         {
             
         }

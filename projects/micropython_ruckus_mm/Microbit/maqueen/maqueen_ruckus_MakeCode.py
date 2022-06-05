@@ -66,12 +66,12 @@ def MessageReceived(message: str):
         OutOfTurn = parseInt(message.char_at(2))
 
         # Check for reset command
-        if OutOfTurn == 2:
+        if LateralMove == 2:
             Assigned = False
             basic.show_icon(IconNames.HAPPY)
         else:
             # Process a move order
-            ProcessMove(Movement, Magnitude, OutOfTurn)
+            ProcessMove(Movement, Magnitude, LateralMove)
     else:
         #Process an instruction
         ReceivedString = message.substr(0, message.index_of(":"))
@@ -89,7 +89,7 @@ def MessageReceived(message: str):
             pass
 
 # Process and execute a move order
-def ProcessMove(Movement: int, Magnitude: int, OutOfTurn: int):
+def ProcessMove(Movement: int, Magnitude: int, LateralMove: int):
     if Movement <= 3:
         # Standard movement
         if Magnitude > 0:

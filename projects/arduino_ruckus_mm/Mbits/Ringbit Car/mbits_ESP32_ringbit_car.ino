@@ -490,7 +490,7 @@ class WiFiCommunication {
     bool started = false;
     
     // Executes a move received by the bot
-    void executeMove(uint8_t movement, uint8_t magnitude, uint8_t outOfTurn) {
+    void executeMove(uint8_t movement, uint8_t magnitude, uint8_t lateralMove) {
     if (movement <= 3)
       {
         // Standard movement
@@ -653,8 +653,8 @@ class WiFiCommunication {
             // Parse movement instruction
             uint8_t movement = message[0] - '0';   // Convert char to int
             uint8_t magnitude = message[1] - '0';  // Convert char to int
-            uint8_t outOfTurn = message[2] - '0';  // Convert char to int
-            if (outOfTurn == 2)
+            uint8_t lateralMove = message[2] - '0';  // Convert char to int
+            if (lateralMove == 2)
             {
               // Bot received reset command
               started = false;
@@ -663,7 +663,7 @@ class WiFiCommunication {
             else
             {
               // Bot received move order
-              executeMove(movement, magnitude, outOfTurn);
+              executeMove(movement, magnitude, lateralMove);
             }
           }
           // Check if in setup mode
