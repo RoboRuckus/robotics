@@ -34,6 +34,9 @@ class Robot {
     String RobotName, botNum;
     int robotColor = 0;
 
+	// If robot supports lateral movement change to "true", else "false"
+    String lateral = "false";
+
     enum class colors { Red, Green, Blue, Yellow, Purple, Orange, Cyan, White };
     enum class images { Clear, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Happy, Sad, Surprised, Duck };
 
@@ -446,8 +449,8 @@ class WiFiCommunication {
         
           // Inform server of bot
           String message = "GET /Bot/Index?ip=";
-          message = message + client + "&name=" + bot->RobotName + " HTTP/1.1\r\nHost: " + serverIP.toString() + ":" + String(port) + "\r\nConnection: close\r\n\r\n"; 
-          String response = sendCommand(message, F("AK\n"));
+		  message = message + ip + "&name=" + bot->RobotName + "&lateralMovement=" + bot->lateral + " HTTP/1.1\r\nHost: " + serverIP.toString() + ":" + String(port) + "\r\nConnection: close\r\n\r\n"; 
+		  String response = sendCommand(message, F("AK\n"));
           if (response.indexOf(F("ERROR")) != -1)
           {
             return false;

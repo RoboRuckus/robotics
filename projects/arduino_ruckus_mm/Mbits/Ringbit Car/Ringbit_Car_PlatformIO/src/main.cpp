@@ -52,8 +52,8 @@ class Robot {
     String RobotName, botNum;
     int robotColor = 0;
     
-    //If robot supports lateral movement
-    String lateral = "true";
+    // If robot supports lateral movement change to "true", else "false"
+    String lateral = "false";
 
   
     // Enums for display colors and images
@@ -794,7 +794,6 @@ class WiFiCommunication {
 /* Global variables */
 
 // Text of update webpage
-// TODO: consider precompiler minification?
 String indexPage = "<!DOCTYPE html>\
 <html lang='en-us'>\
 <head>\
