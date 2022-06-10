@@ -1,8 +1,6 @@
 // -------
 // IO Pins
 // -------
-// L = REVERSE
-// R = FORWARD
 
 #define PPM_DATA_PIN 2
 #define L_EN 3
