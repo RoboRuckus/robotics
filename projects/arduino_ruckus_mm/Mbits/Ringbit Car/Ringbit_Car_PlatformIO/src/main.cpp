@@ -17,6 +17,7 @@
  * ESPAsyncWebServer: https://github.com/esphome/ESPAsyncWebServer
  * ESPAsyncWiFiManager: https://github.com/alanswx/ESPAsyncWiFiManager
  * ArduinoJson: https://github.com/bblanchon/ArduinoJson
+ * ESP32Servo https://github.com/madhephaestus/ESP32Servo
  *
  * Contributors: Sam Groveman
  */
@@ -32,7 +33,6 @@
 #include <FastLED.h>
 #include <MPU6050_tockn.h>
 #include <ESP32Servo.h>
-#include <ESPmDNS.h>
 
 // Global function declarations (there's probably a better way to handle this)
 void updateServerStart();
@@ -75,6 +75,9 @@ class Robot {
       FastLED.show();
 
       // Start IMU
+      mpu6050.begin();
+      // begin() is called a second time to avoid a bug where the gyro counts twice the angle expected
+      delay(5);
       mpu6050.begin();
       calibrateGyro();
 
@@ -192,6 +195,7 @@ class Robot {
       // Keep turning until target angle is met
       while (abs(helper->getAngle()) < target)
       {
+        //Serial.println(abs(helper->getAngle()));
         delay(20);
       }
       // Stop motors      
@@ -304,7 +308,7 @@ class Robot {
 
     /*
      * Called when a robot has new settings.
-     * settings: a comma seprated list of new parameters.
+     * settings: a comma separated list of new parameters.
      * commit: true when the settings should be saved to persistent storage like EEPROM.
      * Should also update robot movement parameter variables with new values.
      */
@@ -512,7 +516,7 @@ class Robot {
       public:
         // Initialize the helper using a the specific sensor
         GyroHelper(MPU6050 &Gyro) : gyro(Gyro) {
-          previousTime = millis();  
+          previousTime = millis();
           gyro.update();        
         }
 
@@ -654,6 +658,9 @@ class WiFiCommunication {
     WiFiServer botserver = WiFiServer(8080);
     WiFiClient client;
 
+    // Robot's IP address
+    String botIP;
+
     // Initialize WiFi object
     WiFiCommunication(){}
     // Setup WiFi object with all necessary info
@@ -667,14 +674,14 @@ class WiFiCommunication {
     // Sets up the robot, connecting to the Wi-Fi, informing the server of itself, and so on.
     bool Startup() {
       // Get assigned IP
-      String ip = WiFi.localIP().toString();
+      botIP = WiFi.localIP().toString();
 
       // Start server
       botserver.begin();
     
       // Inform server of bot
       String message = "GET /Bot/Index?ip=";
-      message = message + ip + "&name=" + bot->RobotName + "&lateralMovement=" + bot->lateral + " HTTP/1.1\r\nHost: " + serverIP.toString() + ":" + String(port) + "\r\nConnection: close\r\n\r\n"; 
+      message = message + botIP + "&name=" + bot->RobotName + "&lateralMovement=" + bot->lateral + " HTTP/1.1\r\nHost: " + serverIP.toString() + ":" + String(port) + "\r\nConnection: close\r\n\r\n"; 
       String response = sendCommand(message, F("AK\n"));
       if (response.indexOf(F("ERROR")) != -1)
       {
@@ -793,14 +800,18 @@ class WiFiCommunication {
 
 /* Global variables */
 
-// Text of update webpage
-String indexPage = "<!DOCTYPE html>\
+// Text of update webpage part 1
+const char indexPage_Part1[] = "<!DOCTYPE html>\
 <html lang='en-us'>\
 <head>\
 <title>Firmware Updater</title>\
 </head>\
 <body>\
 <div id='up-wrap'>\
+  <h1 id='botName' data-name='";
+
+// Text of update webpage part 2
+const char indexPage_Part2[] = "'></h1>\
   <h2>Upload Firmware</h2>\
   <div id='up-progress'>\
     <div id='up-bar'></div>\
@@ -813,6 +824,9 @@ String indexPage = "<!DOCTYPE html>\
   <div id='message'></div>\
 </div>\
 <script>\
+ document.addEventListener('DOMContentLoaded', (e) => {\
+  document.getElementById('botName').innerHTML = decodeURI(document.getElementById('botName').getAttribute('data-name'));\
+ });\
  var uprog = {\
 	hBar : null,\
 	hPercent : null,\
@@ -884,8 +898,11 @@ bool shouldReboot = false;
 // Pin with button to reset WiFi settings (hold for ~5 seconds on boot to reset)
 const int RESET_PIN = 36;
 
-// Push button anytime after connecting to game server to calibrate gyro
+// Pin with button to calibrate gyro, push anytime after connecting to game server to calibrate gyro (only after smiling or frowning)
 const int CALIBRATE_PIN = 36;
+
+// Pin with button to show IP, push to scroll show last octet on screen (only after smiling or frowning)
+const int SHOW_IP_PIN = 39;
 
 // Create the robot object
 Robot bot;
@@ -901,10 +918,9 @@ AsyncWebServer server(80);
 // Starts the update server
 void updateServerStart() {
   Serial.println("Starting update server");
-  MDNS.begin("Web-Update.local");
   // Add requests
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(200, "text/html", indexPage);
+    request->send(200, "text/html", indexPage_Part1 + bot.RobotName + indexPage_Part2);
   });
 
   // Upload a file
@@ -920,7 +936,6 @@ void updateServerStart() {
   });
 
   server.begin();
-  MDNS.addService("http", "tcp", 80);
 }
 
 // Stops the update server
@@ -928,7 +943,6 @@ void updateServerStop() {
   Serial.println("Stopping update server");
   server.reset();
   server.end();
-  MDNS.end();
 }
 
 // Handle firmware update
@@ -1059,7 +1073,7 @@ void setup() {
   {
     Serial.println("Failed to connect and hit timeout");
     delay(3000);
-    //reset and try again, or maybe put it to deep sleep
+    // Reset and try again, or maybe put it to deep sleep
     ESP.restart();
     delay(5000);
   }
@@ -1069,7 +1083,7 @@ void setup() {
   strcpy(game_port, custom_game_port.getValue());
 
   // Save the custom parameters to file
-  if (shouldSaveConfig) 
+  if (shouldSaveConfig)
   {
     Serial.println("Saving WiFi config");
     StaticJsonDocument<256> json;
@@ -1125,6 +1139,9 @@ void setup() {
     delay(1000);
   }
   bot.showImage(Robot::images::Happy, (Robot::colors)bot.robotColor);
+
+  pinMode(CALIBRATE_PIN, INPUT_PULLUP);
+  pinMode(SHOW_IP_PIN, INPUT_PULLUP);
   Serial.println("Ready!");
 }
 
@@ -1144,6 +1161,21 @@ void loop() {
   {
     bot.showImage(Robot::images::Duck, (Robot::colors)bot.robotColor, false);
     bot.calibrateGyro();
+    bot.showImage(bot.currentImage, (Robot::colors)bot.robotColor);
+  }
+
+  // Check if the show IP pin has been pushed
+  if (digitalRead(SHOW_IP_PIN) == LOW)
+  {
+    Serial.println("Displaying IP...");
+    Serial.println("Bot IP: " + wifi.botIP);
+    String last_octet = wifi.botIP.substring(wifi.botIP.lastIndexOf('.') + 1);
+    Serial.println("Last octet: " + last_octet);
+    for (int i = 0; i < last_octet.length(); i++) {
+      // Substring is used instead of [] operator since the [] operator seems to access the wrong part of memory
+      bot.showImage((Robot::images)last_octet.substring(i, i + 1).toInt(), (Robot::colors)bot.robotColor, false);
+      delay(1500);
+    }
     bot.showImage(bot.currentImage, (Robot::colors)bot.robotColor);
   }
 
