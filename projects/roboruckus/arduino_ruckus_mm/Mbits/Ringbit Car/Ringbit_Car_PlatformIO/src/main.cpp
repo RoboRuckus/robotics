@@ -898,10 +898,10 @@ bool shouldReboot = false;
 // Pin with button to reset WiFi settings (hold for ~5 seconds on boot to reset)
 const int RESET_PIN = 36;
 
-// Pin with button to calibrate gyro, push anytime after connecting to game server to calibrate gyro (only after smiling or frowning)
+// Pin with button to calibrate gyro, push anytime after connecting to game server to calibrate gyro (only after smiling)
 const int CALIBRATE_PIN = 36;
 
-// Pin with button to show IP, push to scroll show last octet on screen (only after smiling or frowning)
+// Pin with button to show IP, push to scroll show last octet on screen (only after smiling)
 const int SHOW_IP_PIN = 39;
 
 // Create the robot object
@@ -1175,6 +1175,8 @@ void loop() {
       // Substring is used instead of [] operator since the [] operator seems to access the wrong part of memory
       bot.showImage((Robot::images)last_octet.substring(i, i + 1).toInt(), (Robot::colors)bot.robotColor, false);
       delay(1500);
+	  bot.showImage(Robot::images::Clear, (Robot::colors)bot.robotColor, false);
+      delay(1000);
     }
     bot.showImage(bot.currentImage, (Robot::colors)bot.robotColor);
   }
