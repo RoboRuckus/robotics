@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Iot.Device.ServoMotor</name>
+    </assembly>
+    <members>
+        <member name="T:Iot.Device.ServoMotor.ServoMotor">
+            <summary>
+            Represents a rotary actuator or linear actuator that allows for precise control of angular or linear position.
+            </summary>
+        </member>
+        <member name="M:Iot.Device.ServoMotor.ServoMotor.#ctor(System.Device.Pwm.PwmChannel,System.Double,System.Double,System.Double)">
+            <summary>
+             Initializes a new instance of the <see cref="T:Iot.Device.ServoMotor.ServoMotor"/> class.
+            </summary>
+            <param name="pwmChannel">The PWM channel used to control the servo motor.</param>
+            <param name="maximumAngle">The maximum angle the servo motor can move represented as a value between 0 and 360.</param>
+            <param name="minimumPulseWidthMicroseconds">The minimum pulse width, in microseconds, that represent an angle for 0 degrees.</param>
+            <param name="maximumPulseWidthMicroseconds">The maxnimum pulse width, in microseconds, that represent an angle for maximum angle.</param>
+        </member>
+        <member name="M:Iot.Device.ServoMotor.ServoMotor.Calibrate(System.Double,System.Double,System.Double)">
+            <summary>
+            Sets calibration parameters
+            </summary>
+            <param name="maximumAngle">The maximum angle the servo motor can move represented as a value between 0 and 360.</param>
+            <param name="minimumPulseWidthMicroseconds">The minimum pulse width, in microseconds, that represent an angle for 0 degrees.</param>
+            <param name="maximumPulseWidthMicroseconds">The maxnimum pulse width, in microseconds, that represent an angle for maximum angle.</param>
+        </member>
+        <member name="M:Iot.Device.ServoMotor.ServoMotor.Start">
+            <summary>
+            Starts the servo motor.
+            </summary>
+        </member>
+        <member name="M:Iot.Device.ServoMotor.ServoMotor.Stop">
+            <summary>
+            Stops the servo motor.
+            </summary>
+        </member>
+        <member name="M:Iot.Device.ServoMotor.ServoMotor.WriteAngle(System.Double)">
+            <summary>
+            Writes an angle to the servo motor.
+            </summary>
+            <param name="angle">The angle to write to the servo motor.</param>
+        </member>
+        <member name="M:Iot.Device.ServoMotor.ServoMotor.WritePulseWidth(System.Int32)">
+            <summary>
+            Writes a pulse width to the servo motor.
+            </summary>
+            <param name="microseconds">The pulse width, in microseconds, to write to the servo motor.</param>
+        </member>
+        <member name="M:Iot.Device.ServoMotor.ServoMotor.Dispose">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

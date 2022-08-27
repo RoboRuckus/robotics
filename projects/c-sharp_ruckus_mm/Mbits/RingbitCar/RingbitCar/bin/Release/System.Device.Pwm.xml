@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>System.Device.Pwm</name>
+    </assembly>
+    <members>
+        <member name="T:System.Device.Pwm.PwmChannel">
+            <summary>
+            Represents a single PWM channel.
+            </summary>
+        </member>
+        <member name="P:System.Device.Pwm.PwmChannel.Frequency">
+            <summary>
+            The frequency in hertz.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Value must not be negative.
+            </exception>
+        </member>
+        <member name="P:System.Device.Pwm.PwmChannel.DutyCycle">
+            <summary>
+            The duty cycle represented as a value between 0.0 and 1.0.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Value must be between 0.0 and 1.0.
+            </exception>
+        </member>
+        <member name="M:System.Device.Pwm.PwmChannel.Start">
+            <summary>
+            Starts the PWM channel.
+            </summary>
+        </member>
+        <member name="M:System.Device.Pwm.PwmChannel.Stop">
+            <summary>
+            Stops the PWM channel.
+            </summary>
+        </member>
+        <member name="M:System.Device.Pwm.PwmChannel.Create(System.Int32,System.Int32,System.Int32,System.Double)">
+            <summary>
+            Creates a new instance of the <see cref="T:System.Device.Pwm.PwmChannel"/> running on the current platform.
+            </summary>
+            <param name="chip">The PWM chip number, formally known as TIM channel.</param>
+            <param name="channel">The channel number.</param>
+            <param name="frequency">The frequency in hertz.</param>
+            <param name="dutyCyclePercentage">The duty cycle percentage represented as a value between 0.0 and 1.0.</param>
+            <returns>A <see cref="T:System.Device.Pwm.PwmChannel"/>.</returns>
+        </member>
+        <member name="M:System.Device.Pwm.PwmChannel.CreateFromPin(System.Int32,System.Int32,System.Double)">
+            <summary>
+            Creates a PwmChannel from a pin number.
+            </summary>
+            <param name="pin">The pin number.</param>
+            <param name="frequency">The frequency in hertz.</param>
+            <param name="dutyCyclePercentage">The duty cycle percentage represented as a value between 0.0 and 1.0.</param>
+            <returns>A PWM channel</returns>
+        </member>
+        <member name="M:System.Device.Pwm.PwmChannel.#ctor(System.Int32,System.Int32,System.Int32,System.Double)">
+            <summary>
+            Creates a new instance of the <see cref="T:System.Device.Pwm.PwmChannel"/> running on the current platform.
+            </summary>
+            <param name="chip">The PWM chip number, formally known as TIM channel.</param>
+            <param name="channel">The PWM channel number.</param>
+            <param name="frequency">The frequency in hertz.</param>
+            <param name="dutyCyclePercentage">The duty cycle percentage represented as a value between 0.0 and 1.0.</param>
+            <returns>A PWM channel</returns>
+            <remarks>
+            To create a <see cref="T:System.Device.Pwm.PwmChannel"/> from a GPIO pin number, please use <see cref="M:System.Device.Pwm.PwmChannel.CreateFromPin(System.Int32,System.Int32,System.Double)"/>.
+            </remarks>
+        </member>
+        <member name="M:System.Device.Pwm.PwmChannel.Dispose">
+            <inheritdoc cref="M:System.IDisposable.Dispose"/>
+        </member>
+        <member name="T:System.Device.Pwm.PwmPulsePolarity">
+            <summary>
+            Describes which polarity the PWM signal should start in.
+            </summary>
+        </member>
+        <member name="F:System.Device.Pwm.PwmPulsePolarity.ActiveHigh">
+            <summary>
+            Configures the PWM signal to start in the active high state.
+            </summary>
+        </member>
+        <member name="F:System.Device.Pwm.PwmPulsePolarity.ActiveLow">
+            <summary>
+            Configures the PWM signal to start in the active low state.
+            </summary>
+        </member>
+    </members>
+</doc>
