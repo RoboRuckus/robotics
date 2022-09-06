@@ -2,47 +2,42 @@
 // Being built from:
 // tagnw/robotics:projects/roboruckus/arduino_ruckus_mm/Mbits/Ringbit Car/Ringbit_Car_PlatformIO/src/main.cpp
 
+/*
+Robo Hardware should be in Robot Class
+WiFi class for communication
+Game client class for logic interpretation
+Load settings function for SPIFFs / filesystem stuff
+*/
+
+///////////
+// SETUP //
+///////////
+
 void setup() {
-  hardwareInit()
-  checkForWifiInfoReset()
-  checkForSavedWifiInformation()
-
-  if(shouldEnterPortal) {
-    enterCaptivePortal()
-  } else {
-    connectToWifi()
-  }
-
-  startUpdateServer() // to do the OTA firmware updates
-  // TODO: Stop the update server when running the game
-
-  connectToGameServer()
+  hardwareInit();
+  communicationInit();
+  gameClientInit();
 }
+
+void hardwareInit() {
+  logger.begin();
+  robot.begin();
+}
+
+void communicationInit() {
+  wifi_communication.begin();
+}
+
+void gameClientInit() {
+  game_client.begin();
+}
+
+//////////
+// LOOP //
+//////////
 
 void loop() {
   checkForReboot()
   checkForCalibrationRequest()
   checkForServerMessage()
-}
-
-void hardwareInit() {
-  robot.begin()
-}
-
-void enterCaptivePortal() {
-  parseDataFromUsers() // IP Address & Port of the game server
-}
-
-void connectToGameServer() {
-  wifi.begin()
-}
-
-void checkForCalibrationRequest() {
-  if(calibrationRequested) {
-    calibrate()
-  }
-}
-
-void checkForServerMessage() {
-  wifi.MessageReceived()
 }

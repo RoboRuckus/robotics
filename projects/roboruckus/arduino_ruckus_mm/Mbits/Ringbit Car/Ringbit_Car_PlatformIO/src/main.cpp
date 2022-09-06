@@ -1,13 +1,13 @@
 /*
  * This file is licensed under the MIT Lesser General Public License Copyright (c) 2022 Technology Alliance Group NW (https://tagnw.org)
  *
- * Template for RoboRuckus game robot based on the 
+ * Template for RoboRuckus game robot based on the
  * ESP32 based Mbits board via Arduino platform.
  * https://www.elecrow.com/mbits.html
  *
  * This code is intended to work with the Ring:but Car v2
  * https://www.elecfreaks.com/ring-bit-car-v2-for-micro-bit.html
- * 
+ *
  * External libraries needed:
  * FastLED https://github.com/FastLED/FastLED
  * Temperature_LM75_Derived: https://github.com/jeremycole/Temperature_LM75_Derived <-- Not currently used
@@ -45,22 +45,22 @@ class Robot {
   #define NUM_FRONT_LEDS  2
   #define RIGHT_SERVO_PIN 25
   #define LEFT_SERVO_PIN  32
-  
+
   public:
     // Robot variables
     int playerNumber = 0;
     String RobotName, botNum;
     int robotColor = 0;
-    
+
     // If robot supports lateral movement change to "true", else "false"
     String lateral = "false";
 
-  
+
     // Enums for display colors and images
     enum class colors { Red, Green, Blue, Yellow, Purple, Orange, Cyan, White };
     enum class images { Clear, One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Happy, Sad, Surprised, Duck, Check };
     images currentImage = images::Clear;
-    
+
     // Initialize robot
     Robot(){}
     // Actually initialize robot with call to begin method
@@ -89,7 +89,7 @@ class Robot {
       ESP32PWM::allocateTimer(3);
       // Attach servos
       left.setPeriodHertz(50);  // Standard 50hz servo
-      right.setPeriodHertz(50); 
+      right.setPeriodHertz(50);
       left.attach(LEFT_SERVO_PIN, 500, 2500); // pin, min pulse, max pulse
       right.attach(RIGHT_SERVO_PIN, 500, 2500);
 
@@ -108,12 +108,12 @@ class Robot {
       // Attempt to load saved values
       if (SPIFFS.begin()) {
         Serial.println("Mounted file system");
-        if (SPIFFS.exists("/robot_config.txt")) 
+        if (SPIFFS.exists("/robot_config.txt"))
         {
           // File exists, reading and loading
           Serial.println("Reading robot config file");
           File configFile = SPIFFS.open("/robot_config.txt", "r");
-          if (configFile) 
+          if (configFile)
           {
             Serial.println("Opened robot config file, loading settings");
             String settings = "";
@@ -125,19 +125,19 @@ class Robot {
             configFile.close();
             Serial.println("Settings loaded: " + settings);
             // Apply loaded settings
-            saveSettings(settings, false);            
-          } 
-          else 
+            saveSettings(settings, false);
+          }
+          else
           {
             Serial.println("Robot config file could not be opened");
           }
         }
-        else 
+        else
         {
           Serial.println("Robot config file not found");
         }
-      } 
-      else 
+      }
+      else
       {
         Serial.println("Failed to mount FS");
         // Clean FS
@@ -147,7 +147,7 @@ class Robot {
         ESP.restart();
       }
     }
-    
+
     // Called when a player is assigned to the robot
     void playerAssigned(int player) {
       showImage((images)player, (colors)robotColor);
@@ -158,7 +158,7 @@ class Robot {
     void showImage(images image, colors color, bool cache = true) {
       // Save current image
       if (cache && currentImage != image)
-      { 
+      {
         currentImage = image;
       }
       FastLED.clear();
@@ -167,7 +167,7 @@ class Robot {
       showColor(color_map[(int)color]);
     }
 
-    /* 
+    /*
      *  Called when the robot needs to turn.
      *  direction: 0 = right, 1 = left.
      */
@@ -198,7 +198,7 @@ class Robot {
         //Serial.println(abs(helper->getAngle()));
         delay(20);
       }
-      // Stop motors      
+      // Stop motors
       left.write(90);
       right.write(90);
     }
@@ -214,7 +214,7 @@ class Robot {
       int rightSpeed;
       long start = millis();
       // Keep driving until time limit is reached
-      while (millis() - start < total) 
+      while (millis() - start < total)
       {
         gyroX = helper->getAngle();
         /*
@@ -227,12 +227,12 @@ class Robot {
           rightSpeed = rightForwardSpeed - driftBoost;
           leftSpeed = leftForwardSpeed;
         }
-        else if (gyroX < -drift) 
+        else if (gyroX < -drift)
         {
           rightSpeed = rightForwardSpeed;
           leftSpeed = leftForwardSpeed + driftBoost;
         }
-        else 
+        else
         {
           rightSpeed = rightForwardSpeed;
           leftSpeed = leftForwardSpeed;
@@ -244,7 +244,7 @@ class Robot {
       }
       // Stop motors
       left.write(90);
-      right.write(90); 
+      right.write(90);
     }
 
     // Called when the robot needs to drive backward
@@ -273,7 +273,7 @@ class Robot {
           rightSpeed = rightBackwardSpeed + driftBoost;
           leftSpeed = leftBackwardSpeed;
         }
-        else 
+        else
         {
           rightSpeed = rightBackwardSpeed;
           leftSpeed = leftBackwardSpeed;
@@ -295,7 +295,7 @@ class Robot {
       showImage((images)playerNumber, (colors)robotColor);
     }
 
-    /* 
+    /*
      *  Called when the robot takes damage.
      *  amount = total damage taken so far.
      */
@@ -316,13 +316,13 @@ class Robot {
       // Prase settings string
       String settings_clean = settings.substring(0, settings.length() - 2);
 
-      /* 
+      /*
        * Assign new values.
        * The motor speed is set via the Servo library, which uses a value between 0-180.
        * At the middle value, 90, the motors don't turn, above that value the motors
        * turn one direction increasing in speed the further from 90. Below 90 is the same
        * only the wheels turn the opposite direction. To let the user set a value from 0-90
-       * with 90 being the fastest, you need to subtract each value from 90 when receiving 
+       * with 90 being the fastest, you need to subtract each value from 90 when receiving
        * or sending the value if the desired setting is below 90. For wheels that need to
        * have values above 90, 90 must be added.
        */
@@ -336,7 +336,7 @@ class Robot {
       driftBoost = getValue(settings_clean, ',', 7).toInt();
       turnAngle = getValue(settings_clean, ',', 8).toFloat();
       robotColor = getValue(settings_clean, ',', 9).toInt();
-      
+
       // Save values to file
       if (commit)
       {
@@ -348,7 +348,7 @@ class Robot {
         else
         {
           configFile.print(settings);
-          configFile.close();     
+          configFile.close();
         }
       }
     }
@@ -413,7 +413,7 @@ class Robot {
     void calibrateGyro() {
       mpu6050.calcGyroOffsets(true, 2000, 1000);
       Serial.println("");
-    } 
+    }
 
   private:
     CRGBArray<25> leds;
@@ -426,7 +426,7 @@ class Robot {
     // int BUZZER_CHANNEL = 0;
     Servo left, right;
 
-    // Robot movement parameters 
+    // Robot movement parameters
     int leftForwardSpeed, rightForwardSpeed, rightBackwardSpeed, leftBackwardSpeed, linearTime, driftBoost, drift;
     float turnAngle;
 
@@ -460,7 +460,7 @@ class Robot {
       CRGB(0, 196, 255),  // Cyan
       CRGB(144, 144, 128) // White
     };
-    
+
     // Takes a string and splits it by a deliminator and returns substring at desired index
     String getValue(String data, char separator, int index) {
       int found = 0;
@@ -470,7 +470,7 @@ class Robot {
 
       // Look for substring between delimiters
       for(int i=0; i <= maxIndex && found <= index; i++) {
-        if(data.charAt(i) == separator || i == maxIndex) 
+        if(data.charAt(i) == separator || i == maxIndex)
         {
             found++;
             strIndex[0] = strIndex[1] + 1;
@@ -517,7 +517,7 @@ class Robot {
         // Initialize the helper using a the specific sensor
         GyroHelper(MPU6050 &Gyro) : gyro(Gyro) {
           previousTime = millis();
-          gyro.update();        
+          gyro.update();
         }
 
         // Get the angle turned since last called
@@ -549,7 +549,7 @@ class WiFiCommunication {
     int port;
     Robot* bot;
     bool started = false;
-    
+
     // Executes a move received by the bot
     void executeMove(uint8_t movement, uint8_t magnitude, uint8_t lateralMove) {
       if (movement <= 3)
@@ -584,7 +584,7 @@ class WiFiCommunication {
         }
       }
       // Non-movement command
-      else 
+      else
       {
         switch(movement)
         {
@@ -602,7 +602,7 @@ class WiFiCommunication {
         String message = "GET /Bot/Done?bot=";
         message = message + bot->botNum + " HTTP/1.1\r\nHost: " + serverIP.toString() + ":" + String(port) + "\r\nConnection: close\r\n\r\n";
         // Notify server that bot has finished moving, check for acknowledgment
-        response = sendCommand(message, F("AK\n"));     
+        response = sendCommand(message, F("AK\n"));
       } while (response.indexOf(F("ERROR")) != -1);
     }
 
@@ -621,14 +621,14 @@ class WiFiCommunication {
         Message = Message.substring(Message.indexOf(':') + 1);
       }
 
-      if (instruction == 0) 
+      if (instruction == 0)
       {
         // Load the settings
         String settings = bot->loadSettings();
         // Send the settings to the game server
         client.println(settings);
       }
-      else if (instruction == 1) 
+      else if (instruction == 1)
       {
         // Save the settings temporarily
         bot->saveSettings(Message, false);
@@ -636,7 +636,7 @@ class WiFiCommunication {
         // Run a speed test
         bot->speedTest();
       }
-      else if (instruction == 2) 
+      else if (instruction == 2)
       {
         // Save the settings temporarily
         bot->saveSettings(Message, false);
@@ -644,15 +644,15 @@ class WiFiCommunication {
         // Run a navigation test
         bot->navigationTest();
       }
-      else if (instruction == 3) 
+      else if (instruction == 3)
       {
         // Save the settings persistently and exit setup mode
         bot->saveSettings(Message, true);
         inSetupMode = false;
         bot->showImage(Robot::images::Happy, (Robot::colors)bot->robotColor);
-      }     
+      }
     }
-    
+
   public:
     bool inSetupMode = false;
     WiFiServer botserver = WiFiServer(8080);
@@ -678,15 +678,15 @@ class WiFiCommunication {
 
       // Start server
       botserver.begin();
-    
+
       // Inform server of bot
       String message = "GET /Bot/Index?ip=";
-      message = message + botIP + "&name=" + bot->RobotName + "&lateralMovement=" + bot->lateral + " HTTP/1.1\r\nHost: " + serverIP.toString() + ":" + String(port) + "\r\nConnection: close\r\n\r\n"; 
+      message = message + botIP + "&name=" + bot->RobotName + "&lateralMovement=" + bot->lateral + " HTTP/1.1\r\nHost: " + serverIP.toString() + ":" + String(port) + "\r\nConnection: close\r\n\r\n";
       String response = sendCommand(message, F("AK\n"));
       if (response.indexOf(F("ERROR")) != -1)
       {
         return false;
-      }        
+      }
       return true;
     }
 
@@ -697,9 +697,9 @@ class WiFiCommunication {
       {
         // Respond
         client.print(F("OK"));
-      }		  
+      }
       // Check if game is already started
-      if (started) 
+      if (started)
       {
         // Parse movement instruction
         uint8_t movement = message[0] - '0';   // Convert char to int
@@ -722,7 +722,7 @@ class WiFiCommunication {
       // Check if in setup mode
       else if (inSetupMode)
       {
-        setupMode(message);            
+        setupMode(message);
       }
       else
       {
@@ -767,9 +767,9 @@ class WiFiCommunication {
           client.print(message);
           delay(5);
         }
-        else 
+        else
         {
-          return "ERROR";  
+          return "ERROR";
         }
       }
       // Check if reading from module
@@ -968,7 +968,7 @@ void onUpdate(AsyncWebServerRequest *request, String filename, size_t index, uin
     if(Update.end(true))
     {
       Serial.printf("Update Success: %uB\n", index+len);
-    } 
+    }
     else
     {
       Update.printError(Serial);
@@ -998,6 +998,7 @@ void setup() {
   // Start the serial connection
   Serial.begin(115200);
   Serial.println("Starting");
+  // Arduino library - Start I2C on these pins
   Wire.begin(22,21);
 
   // Initialize robot
@@ -1012,7 +1013,7 @@ void setup() {
     delay(2000);
     ESP.restart();
   }
- 
+
   // SPIFFS should already be mounted by robot class
   // Load settings and check for WiFi config
   if (SPIFFS.exists("/wifi_config.json"))
@@ -1045,7 +1046,7 @@ void setup() {
       }
     }
   }
-  
+
   // The extra parameters to be configured (can be either global or just in the setup)
   // After connecting, parameter.getValue() will get you the configured value
   AsyncWiFiManagerParameter custom_game_server("server", "Game Server", game_server, 40);
@@ -1065,7 +1066,7 @@ void setup() {
   String AP_ssid_string = "Ruckus_" + String((uint32_t)ESP.getEfuseMac(), HEX);
   char AP_ssid[AP_ssid_string.length()];
   AP_ssid_string.toCharArray(AP_ssid, AP_ssid_string.length());
-  
+
   // Fetches ssid and password and tries to connect
   // if it does not connect it starts an access point with the specified name
   // and goes into a blocking loop awaiting configuration
@@ -1077,7 +1078,7 @@ void setup() {
     ESP.restart();
     delay(5000);
   }
-  
+
   // Read updated parameters
   strcpy(game_server, custom_game_server.getValue());
   strcpy(game_port, custom_game_port.getValue());
@@ -1107,14 +1108,14 @@ void setup() {
   // There's probably a better way to do this
   String server_port = String(game_port);
   int server_port_int = server_port.toInt();
-  if (server_port_int != 0) 
+  if (server_port_int != 0)
   {
     Port = server_port_int;
   }
 
   Serial.println("Parsing saved port and IP");
   byte ip[4];
-  if (sscanf(game_server, "%hhu.%hhu.%hhu.%hhu", ip, ip+1, ip+2, ip+3) != 4) 
+  if (sscanf(game_server, "%hhu.%hhu.%hhu.%hhu", ip, ip+1, ip+2, ip+3) != 4)
   {
     Serial.print("Invalid IP: ");
     Serial.println(game_server);
@@ -1124,7 +1125,7 @@ void setup() {
     ip[3] = 1;
   }
   IPAddress IP(ip[0], ip[1], ip[2], ip[3]);
-  
+
   // Clear server settings just in case
   updateServerStop();
 
@@ -1133,7 +1134,7 @@ void setup() {
 
   // Initialize the WiFi module and connect to server
   wifi.begin(IP, Port, &bot);
-  while (!wifi.Startup() && !shouldReboot) 
+  while (!wifi.Startup() && !shouldReboot)
   {
     bot.showImage(Robot::images::Sad, (Robot::colors)bot.robotColor);
     delay(1000);
@@ -1147,7 +1148,7 @@ void setup() {
 
 void loop() {
   // Check for firmware update requiring a reboot
-  if (shouldReboot) 
+  if (shouldReboot)
   {
     Serial.println("Firmware updated, rebooting...");
     bot.showImage(Robot::images::Check, (Robot::colors)bot.robotColor);
@@ -1184,7 +1185,7 @@ void loop() {
   wifi.client = wifi.botserver.available();
   if (wifi.client) // Check if the WiFi server has a message
   {
-    if (wifi.client.connected()) 
+    if (wifi.client.connected())
     {
       // Read message
       String message = "";
