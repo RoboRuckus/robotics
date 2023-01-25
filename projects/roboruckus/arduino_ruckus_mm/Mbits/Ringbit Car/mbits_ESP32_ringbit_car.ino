@@ -1,5 +1,5 @@
 /*
- * This file is licensed under the MIT Lesser General Public License Copyright (c) 2022 Technology Alliance Group NW (https://tagnw.org)
+ * This file is licensed under the MIT Lesser General Public License Copyright (c) 2022 Josh Buker
  *
  * Template for RoboRuckus game robot based on the 
  * ESP32 based Mbits board via Arduino platform.

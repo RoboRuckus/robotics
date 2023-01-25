@@ -35,6 +35,4 @@ Confused about the difference between the Micro:Bit v1 and v2? Read about the di
 
 ### Tutorials
 
-#### TAG Tutorials
-
 #### External Tutorials

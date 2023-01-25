@@ -1,5 +1,5 @@
 /* 
- * This file is licensed under the MIT Lesser General Public License Copyright (c) 2021 Technology Alliance Group NW (https://tagnw.org)
+ * This file is licensed under the MIT Lesser General Public License Copyright (c) 2021 Josh Buker
  *
  * Template for RoboRuckus game robot for the 
  * Arduino platform using an ESP-01S model

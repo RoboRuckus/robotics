@@ -16,6 +16,4 @@
 
 ### Tutorials
 
-#### TAG Tutorials
-
 #### External Tutorials

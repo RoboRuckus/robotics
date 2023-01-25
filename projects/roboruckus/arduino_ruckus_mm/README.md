@@ -4,7 +4,7 @@ Here you'll find the relevant robot code to connect an Arduino based robot to th
 
 ## Deploying
 1. Open the code in the [Arduino IDE](https://www.arduino.cc/en/Guide) or IDE of choice.
-2. Copy the contents of the [template](https://github.com/tagnw/robotics/blob/main/projects/arduino_ruckus_mm/ruckus_mm_template.ino) to the IDE.
+2. Copy the contents of the [template](https://github.com/BellinghamMakerspace/robotics/blob/main/projects/arduino_ruckus_mm/ruckus_mm_template.ino) to the IDE.
 3. Modify the code to suit your robot (details below).
 4. Flash to your robot.
 5. Enjoy!

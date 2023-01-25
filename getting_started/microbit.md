@@ -26,6 +26,4 @@ v2 has all the features of v1, plus the following features:
 
 ### Tutorials
 
-#### TAG Tutorials
-
 #### External Tutorials

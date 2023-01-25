@@ -1,5 +1,5 @@
 # Maqueen:Plus hardware and I2C definitions: MIT Lesser General Public License Copyright (c) 2010-2020 DFRobot Co.Ltd (http://www.dfrobot.com)
-# uPython module: MIT Lesser General Public License Copyright (c) 2021 Technology Alliance Group NW (https://tagnw.org)
+# uPython module: MIT Lesser General Public License Copyright (c) 2021 Josh Buker
 # Contributors: ShipShupe, Sam Groveman
 
 from microbit import pin1, pin2, i2c, display, Image, sleep, uart, running_time, audio, Sound, button_a

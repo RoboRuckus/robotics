@@ -9,19 +9,19 @@ Here you'll find the relevant robot code to connect a Maqueen robot to the [Robo
 1. Download an appropriate IDE, the [Mu Editor](https://codewith.mu/) is recommended.
 2. Open the editor and put it in `BBC micro:bit` mode.
 3. Copy and paste the [maqueen_ruckus_uPython.py](maqueen_ruckus_uPython.py) code.
-4. Change the Wi-Fi and server settings at top of the code as needed (see [Connecting and Calibrating](https://github.com/tagnw/robotics/tree/main/projects/maqueen_ruckus_mm#connecting-and-calibrating)).
+4. Change the Wi-Fi and server settings at top of the code as needed (see [Connecting and Calibrating](https://github.com/BellinghamMakerspace/robotics/tree/main/projects/maqueen_ruckus_mm#connecting-and-calibrating)).
 5. Plug in your Micro:bit to your computer via USB and press the `Flash` button in Mu.
 6. Enjoy!
 
 ### Make Code
-[This code](https://github.com/tagnw/robotics/blob/main/projects/maqueen_ruckus_mm/maqueen_ruckus_MakeCode.py) is written in [MakeCode](https://makecode.microbit.org/).
+[This code](https://github.com/BellinghamMakerspace/robotics/blob/main/projects/maqueen_ruckus_mm/maqueen_ruckus_MakeCode.py) is written in [MakeCode](https://makecode.microbit.org/).
 
 1. First create a new project and add the MaqueenPlus extension.
 2. Switch to Python editing and copy/paste the [maqueen_ruckus_MakeCode.py](maqueen_ruckus_MakeCode.py) code.
-3. Change the [RobotName](https://github.com/tagnw/robotics/blob/main/projects/maqueen_ruckus_mm/maqueen_ruckus_MakeCode.py#L15) to something unique to this robot. Must be [URL escaped](https://www.december.com/html/spec/esccodes.html).
-4. Optioanlly, change the [robot's LED color](https://github.com/tagnw/robotics/blob/main/projects/maqueen_ruckus_mm/maqueen_ruckus_MakeCode.py#L6).
+3. Change the [RobotName](https://github.com/BellinghamMakerspace/robotics/blob/main/projects/maqueen_ruckus_mm/maqueen_ruckus_MakeCode.py#L15) to something unique to this robot. Must be [URL escaped](https://www.december.com/html/spec/esccodes.html).
+4. Optioanlly, change the [robot's LED color](https://github.com/BellinghamMakerspace/robotics/blob/main/projects/maqueen_ruckus_mm/maqueen_ruckus_MakeCode.py#L6).
 5. From the right-hand sidebar, open the explorer and delete the "radio" package.
-6. Change any of the settings in the variables towards the top of the code as needed (see [Connecting and Calibrating](https://github.com/tagnw/robotics/tree/main/projects/maqueen_ruckus_mm#connecting-and-calibrating)).
+6. Change any of the settings in the variables towards the top of the code as needed (see [Connecting and Calibrating](https://github.com/BellinghamMakerspace/robotics/tree/main/projects/maqueen_ruckus_mm#connecting-and-calibrating)).
 7. Plug in your Micro:bit to your computer via USB and download the code from the MakeCode website to your Micro:bit.
 8. Enjoy!
 
@@ -43,9 +43,9 @@ Once the code has been deployed and the Wi-Fi module has been hooked-up, you can
 If the robot is reconnecting after losing power or being switched off in the middle of a game, it may receive an erroneous movement command. This is fine and the robot should be good to go after it finishes this movement.
 
 ### Calibration
-If you are using the μPython version of the code, and **only** the μPython version of the code, you can use the RoboRuckus server to [tune the robots](https://www.roboruckus.com/documentation/running-a-game/#Tuning-the-Robots). Note that the actual tuning options presented will be different depending on the robot design being used. For the Maqueen you will have the options to tune the variables [described below](https://github.com/tagnw/robotics/tree/main/projects/maqueen_ruckus_mm#tuning-variables). You can also set the LED colors for the robot. For details on deploying your own tuning options for other robots designs, see [below](https://github.com/tagnw/robotics/tree/main/projects/maqueen_ruckus_mm#custom-tuning-options).
+If you are using the μPython version of the code, and **only** the μPython version of the code, you can use the RoboRuckus server to [tune the robots](https://www.roboruckus.com/documentation/running-a-game/#Tuning-the-Robots). Note that the actual tuning options presented will be different depending on the robot design being used. For the Maqueen you will have the options to tune the variables [described below](https://github.com/BellinghamMakerspace/robotics/tree/main/projects/maqueen_ruckus_mm#tuning-variables). You can also set the LED colors for the robot. For details on deploying your own tuning options for other robots designs, see [below](https://github.com/BellinghamMakerspace/robotics/tree/main/projects/maqueen_ruckus_mm#custom-tuning-options).
 
-The `Speed Test` button will also calibrate the wheel speeds as described [below](https://github.com/tagnw/robotics/tree/main/projects/maqueen_ruckus_mm#wheel-speed-calibration), pushing the **A** button will also work identically to what's described below.
+The `Speed Test` button will also calibrate the wheel speeds as described [below](https://github.com/BellinghamMakerspace/robotics/tree/main/projects/maqueen_ruckus_mm#wheel-speed-calibration), pushing the **A** button will also work identically to what's described below.
 
 ### Wheel Speed Calibration
 If everything connected properly, set the Maqueen down on the edge of the game board and press the **A** button on the Micro:bit. The Maqueen will drive forward for four seconds adjusting the wheel speeds until they match. It will then drive backwards for four seconds and do the same. You can repeat this process at any time if the Maqueen seems to need recalibration. Calibration settings are not preserved when the Maqueen is switched off.
@@ -53,7 +53,7 @@ If everything connected properly, set the Maqueen down on the edge of the game b
 ### Tuning Movement
 If you are using the MakeCode version of the code, and **only** the MakeCode version, after calibration, you can test the Maqueen's movement by setting it on the board and pushing the **B** button on the Micro:bit. This will have the Maqueen drive a little test pattern, moving two squares forward, one square backward, turning right 90 degrees, left 90 degrees, then right 180 degrees.
 
-If the Maqueen completes this sequence successfully, you're good to go. If it has trouble, you may need to adjust some of the movement timing variables near the top of the [Maqueen code](maqueen_ruckus_mm.py). You will then need to [re-deploy](https://github.com/tagnw/robotics/tree/main/projects/maqueen_ruckus_mm#deploying) the modified code to the Maqueen and repeat this calibration process.
+If the Maqueen completes this sequence successfully, you're good to go. If it has trouble, you may need to adjust some of the movement timing variables near the top of the [Maqueen code](maqueen_ruckus_mm.py). You will then need to [re-deploy](https://github.com/BellinghamMakerspace/robotics/tree/main/projects/maqueen_ruckus_mm#deploying) the modified code to the Maqueen and repeat this calibration process.
 
 ### Tuning Variables
 The vairables to tune are as follows:
@@ -77,7 +77,7 @@ The `data` sent by the server is a comma separated string of the new tuning vari
 ```
 RobotName,value_1,value_2,...,value_n:
 ```
-The new robot name is always first in the list, and the remaining values are what are described by the [JSON object below](https://github.com/tagnw/robotics/tree/main/projects/maqueen_ruckus_mm#the-json-object).
+The new robot name is always first in the list, and the remaining values are what are described by the [JSON object below](https://github.com/BellinghamMakerspace/robotics/tree/main/projects/maqueen_ruckus_mm#the-json-object).
 #### The JSON object
 This JSON string is used by a bot to inform the server of what tuning parameters are available to be adjusted and what their current values are. The object has the form:
 ```

@@ -1,4 +1,4 @@
-# TAG Robotics
+# BMS Robotics
 
 Start with [Find a Project](find_a_project.md).
 
