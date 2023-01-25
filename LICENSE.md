@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2021 [Technology Alliance Group for Northwest Washington](https://tagnw.org)
+Copyright (c) 2021 Josh Buker
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
